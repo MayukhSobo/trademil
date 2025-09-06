@@ -1,0 +1,139 @@
+/* Custom CSS for Treadmill Documentation */
+
+/* Improve code block styling */
+.highlight {
+    background: #f8f9fa !important;
+    border: 1px solid #e9ecef;
+    border-radius: 6px;
+    margin: 1em 0;
+}
+
+.highlight pre {
+    background: transparent !important;
+    padding: 1rem;
+    margin: 0;
+    font-size: 0.9em;
+    line-height: 1.5;
+}
+
+/* Style for inline code */
+code {
+    background-color: #f1f3f4 !important;
+    padding: 2px 4px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: #d63384;
+}
+
+/* Improve table styling */
+.rst-content table.docutils {
+    border-collapse: collapse;
+    margin: 1em 0;
+    border: 1px solid #ddd;
+}
+
+.rst-content table.docutils th,
+.rst-content table.docutils td {
+    border: 1px solid #ddd;
+    padding: 8px 12px;
+}
+
+.rst-content table.docutils th {
+    background-color: #f8f9fa;
+    font-weight: bold;
+}
+
+/* Style for admonitions (notes, warnings, etc.) */
+.rst-content .admonition {
+    margin: 1em 0;
+    padding: 1rem;
+    border-left: 4px solid;
+    border-radius: 4px;
+}
+
+.rst-content .admonition.note {
+    background-color: #e7f3ff;
+    border-left-color: #2196F3;
+}
+
+.rst-content .admonition.warning {
+    background-color: #fff8e1;
+    border-left-color: #ff9800;
+}
+
+.rst-content .admonition.tip {
+    background-color: #e8f5e8;
+    border-left-color: #4caf50;
+}
+
+/* Improve navigation styling */
+.wy-menu-vertical li.current a {
+    border-right: 3px solid #2196F3;
+}
+
+.wy-menu-vertical li.toctree-l1.current > a {
+    background-color: #e7f3ff;
+}
+
+/* Style for API documentation */
+.rst-content dl:not(.docutils) dt {
+    background: #f8f9fa;
+    border-left: 3px solid #2196F3;
+    padding: 0.5rem;
+    margin-top: 1rem;
+    font-weight: bold;
+}
+
+/* Improve heading styling */
+.rst-content h1 {
+    border-bottom: 2px solid #2196F3;
+    padding-bottom: 0.3rem;
+    margin-bottom: 1rem;
+}
+
+.rst-content h2 {
+    border-bottom: 1px solid #e1e4e8;
+    padding-bottom: 0.3rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+/* Style for badges and inline elements */
+.badge {
+    display: inline-block;
+    padding: 0.25em 0.4em;
+    font-size: 0.75em;
+    font-weight: 700;
+    line-height: 1;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 0.375rem;
+    background-color: #6c757d;
+    color: #fff;
+}
+
+/* Responsive improvements */
+@media screen and (max-width: 768px) {
+    .highlight pre {
+        font-size: 0.8em;
+        overflow-x: auto;
+    }
+    
+    .rst-content table.docutils {
+        font-size: 0.9em;
+    }
+}
+
+/* Dark mode support (if theme supports it) */
+@media (prefers-color-scheme: dark) {
+    .highlight {
+        background: #2d3748 !important;
+        border-color: #4a5568;
+    }
+    
+    code {
+        background-color: #4a5568 !important;
+        color: #fbb6ce;
+    }
+} 
