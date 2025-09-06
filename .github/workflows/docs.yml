@@ -6,12 +6,24 @@ on:
   pull_request:
     branches: [ main ]
 
+# Add permissions for GitHub Pages deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
 jobs:
   docs:
     runs-on: ubuntu-latest
     
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     
     - name: Set up Python
       uses: actions/setup-python@v4
@@ -21,18 +33,136 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -e ".[full]"
-        pip install sphinx sphinx-rtd-theme myst-parser
+        pip install -e ".[dev]"
+        pip install sphinx sphinx-rtd-theme myst-parser sphinx-autodoc-typehints
+    
+    - name: Create docs directory structure
+      run: |
+        mkdir -p docs/_static docs/_templates
+    
+    - name: Create Sphinx configuration
+      run: |
+        cat > docs/conf.py << 'CONFEOF'
+        import os
+        import sys
+        sys.path.insert(0, os.path.abspath('..'))
+        
+        project = 'Treadmill'
+        copyright = '2024, Treadmill Contributors'
+        author = 'Treadmill Contributors'
+        
+        extensions = [
+            'sphinx.ext.autodoc',
+            'sphinx.ext.viewcode',
+            'sphinx.ext.napoleon',
+            'sphinx_rtd_theme',
+            'myst_parser',
+        ]
+        
+        templates_path = ['_templates']
+        exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
+        
+        html_theme = 'sphinx_rtd_theme'
+        html_static_path = ['_static']
+        
+        napoleon_google_docstring = True
+        napoleon_numpy_docstring = True
+        napoleon_include_init_with_doc = False
+        napoleon_include_private_with_doc = False
+        CONFEOF
+    
+    - name: Create index documentation
+      run: |
+        cat > docs/index.rst << 'INDEXEOF'
+        Treadmill Documentation
+        =======================
+        
+        Welcome to Treadmill's documentation!
+        
+        .. toctree::
+           :maxdepth: 2
+           :caption: Contents:
+        
+           api
+        
+        Indices and tables
+        ==================
+        
+        * :ref:`genindex`
+        * :ref:`modindex`
+        * :ref:`search`
+        INDEXEOF
+    
+    - name: Create API documentation
+      run: |
+        cat > docs/api.rst << 'APIEOF'
+        API Reference
+        =============
+        
+        .. automodule:: treadmill
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        
+        .. automodule:: treadmill.trainer
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        
+        .. automodule:: treadmill.config
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        
+        .. automodule:: treadmill.metrics
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        
+        .. automodule:: treadmill.callbacks
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        
+        .. automodule:: treadmill.utils
+           :members:
+           :undoc-members:
+           :show-inheritance:
+        APIEOF
+    
+    - name: Create Makefile
+      run: |
+        cat > docs/Makefile << 'MAKEEOF'
+        SPHINXOPTS    ?=
+        SPHINXBUILD   ?= sphinx-build
+        SOURCEDIR     = .
+        BUILDDIR      = _build
+        
+        help:
+        	@$(SPHINXBUILD) -M help "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+        
+        .PHONY: help Makefile
+        
+        %: Makefile
+        	@$(SPHINXBUILD) -M $@ "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
+        MAKEEOF
     
     - name: Build documentation
       run: |
         cd docs
         make html
-      continue-on-error: true
+    
+    - name: Setup Pages
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/configure-pages@v4
+    
+    - name: Upload artifact
+      if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ./docs/_build/html
     
     - name: Deploy to GitHub Pages
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./docs/_build/html 
+      id: deployment
+      uses: actions/deploy-pages@v4 
