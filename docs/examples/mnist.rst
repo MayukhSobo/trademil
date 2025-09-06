@@ -1,32 +1,30 @@
-MNIST Digit Classification
-==========================
+MNIST Convolutional Networks
+============================
 
-This example demonstrates how to build a complete MNIST digit classification system using Treadmill. We'll walk through every step from data loading to model evaluation.
+This example demonstrates how to use convolutional neural networks (CNNs) for image classification with Treadmill. We'll build a simple CNN for MNIST digit recognition, focusing on fundamental CNN concepts.
 
 Overview
 --------
 
-**What we'll build:**
-- A convolutional neural network for handwritten digit recognition
-- Complete training pipeline with validation and testing
-- Comprehensive evaluation and visualization
+**What you'll learn:**
+- Basic convolutional neural network architecture
+- Simple CNN layers (Conv2d, MaxPool2d)
+- Image data handling with Treadmill
+- Basic image classification workflow
 
-**Key features demonstrated:**
-- Custom model architecture
-- Data augmentation techniques
-- Training with callbacks
-- Model evaluation and visualization
+**Estimated time:** 15 minutes
 
 Prerequisites
 -------------
 
 .. code-block:: bash
 
-    pip install -e ".[full]"
-    pip install matplotlib seaborn
+    pip install -e ".[examples]"
 
-Complete Implementation
------------------------
+Simple CNN for MNIST
+---------------------
+
+Let's build a basic CNN for handwritten digit recognition:
 
 .. code-block:: python
 
@@ -35,77 +33,105 @@ Complete Implementation
     import torch.nn.functional as F
     import torchvision
     import torchvision.transforms as transforms
-    from torch.utils.data import DataLoader, random_split
+    from torch.utils.data import DataLoader
     import matplotlib.pyplot as plt
     import numpy as np
 
-    from treadmill import Trainer, TrainingConfig, OptimizerConfig
-    from treadmill.callbacks import EarlyStopping, ModelCheckpoint
-
-    # Set random seed for reproducibility
+    from treadmill import Trainer, TrainingConfig
+    
+    # Set random seed
     torch.manual_seed(42)
     np.random.seed(42)
 
-Step 1: Data Preparation
-^^^^^^^^^^^^^^^^^^^^^^^^
+Step 1: Load MNIST Dataset
+^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
-    # Define transforms
-    train_transform = transforms.Compose([
-        transforms.RandomRotation(10),           # Random rotation ±10 degrees
-        transforms.RandomAffine(0, translate=(0.1, 0.1)),  # Small translations
+    # Simple transforms for MNIST
+    transform = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize((0.1307,), (0.3081,))  # MNIST mean and std
     ])
 
-    test_transform = transforms.Compose([
-        transforms.ToTensor(),
-        transforms.Normalize((0.1307,), (0.3081,))
-    ])
-
     # Load MNIST dataset
     train_dataset = torchvision.datasets.MNIST(
-        root='./data', train=True, download=True, transform=train_transform
+        root='./data', train=True, download=True, transform=transform
     )
 
     test_dataset = torchvision.datasets.MNIST(
-        root='./data', train=False, download=True, transform=test_transform
+        root='./data', train=False, download=True, transform=transform
     )
 
-    # Split training data for validation
-    train_size = int(0.8 * len(train_dataset))
-    val_size = len(train_dataset) - train_size
-    train_subset, val_subset = random_split(train_dataset, [train_size, val_size])
-
     # Create data loaders
-    batch_size = 64
-    train_loader = DataLoader(train_subset, batch_size=batch_size, shuffle=True, num_workers=2)
-    val_loader = DataLoader(val_subset, batch_size=batch_size, shuffle=False, num_workers=2)
-    test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False, num_workers=2)
+    train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
+    test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 
-    print(f"Training samples: {len(train_subset)}")
-    print(f"Validation samples: {len(val_subset)}")
+    print(f"Training samples: {len(train_dataset)}")
     print(f"Test samples: {len(test_dataset)}")
 
-Step 2: Visualize Data
-^^^^^^^^^^^^^^^^^^^^^^
+Step 2: Simple CNN Architecture
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
-    def visualize_samples(dataset, num_samples=12):
-        """Visualize random samples from the dataset."""
-        fig, axes = plt.subplots(3, 4, figsize=(10, 8))
-        fig.suptitle('MNIST Sample Images', fontsize=16)
+    class SimpleCNN(nn.Module):
+        """Simple Convolutional Neural Network for MNIST."""
+        
+        def __init__(self):
+            super(SimpleCNN, self).__init__()
+            
+            # Convolutional layers
+            self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)  # 28x28 -> 28x28
+            self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)  # 14x14 -> 14x14
+            
+            # Pooling layer
+            self.pool = nn.MaxPool2d(2, 2)  # Halves the spatial dimensions
+            
+            # Fully connected layers
+            self.fc1 = nn.Linear(64 * 7 * 7, 128)  # 7x7 after two pooling operations
+            self.fc2 = nn.Linear(128, 10)  # 10 classes for digits 0-9
+            
+            # Dropout for regularization
+            self.dropout = nn.Dropout(0.5)
+            
+        def forward(self, x):
+            # First conv block: 28x28x1 -> 14x14x32
+            x = self.pool(F.relu(self.conv1(x)))
+            
+            # Second conv block: 14x14x32 -> 7x7x64
+            x = self.pool(F.relu(self.conv2(x)))
+            
+            # Flatten: 7x7x64 -> 3136
+            x = x.view(-1, 64 * 7 * 7)
+            
+            # Fully connected layers
+            x = F.relu(self.fc1(x))
+            x = self.dropout(x)
+            x = self.fc2(x)
+            
+            return x
+
+    # Create model
+    model = SimpleCNN()
+    print(f"Model has {sum(p.numel() for p in model.parameters()):,} parameters")
+
+Step 3: Visualize Sample Data
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: python
+
+    def show_samples(dataset, num_samples=8):
+        """Show sample images from the dataset."""
+        fig, axes = plt.subplots(2, 4, figsize=(10, 5))
+        fig.suptitle('MNIST Sample Images')
         
         for i in range(num_samples):
-            idx = np.random.randint(0, len(dataset))
-            image, label = dataset[idx]
+            image, label = dataset[i]
             
             # Convert tensor to numpy and denormalize
-            if isinstance(image, torch.Tensor):
-                image_np = image.squeeze().numpy()
-                image_np = image_np * 0.3081 + 0.1307  # Denormalize
+            image_np = image.squeeze().numpy()
+            image_np = image_np * 0.3081 + 0.1307  # Denormalize
             
             ax = axes[i // 4, i % 4]
             ax.imshow(image_np, cmap='gray')
@@ -115,230 +141,80 @@ Step 2: Visualize Data
         plt.tight_layout()
         plt.show()
 
-    # Visualize some training samples
-    visualize_samples(train_subset)
+    # Show some samples
+    show_samples(train_dataset)
 
-Step 3: Define Model Architecture
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-    class MNISTNet(nn.Module):
-        """
-        Convolutional Neural Network for MNIST digit classification.
-        
-        Architecture:
-        - Two convolutional layers with ReLU activation
-        - Max pooling after each conv layer
-        - Dropout for regularization
-        - Two fully connected layers
-        """
-        
-        def __init__(self, num_classes=10, dropout_rate=0.5):
-            super(MNISTNet, self).__init__()
-            
-            # Convolutional layers
-            self.conv1 = nn.Conv2d(1, 32, kernel_size=3, padding=1)
-            self.conv2 = nn.Conv2d(32, 64, kernel_size=3, padding=1)
-            
-            # Pooling layer
-            self.pool = nn.MaxPool2d(kernel_size=2, stride=2)
-            
-            # Fully connected layers
-            self.fc1 = nn.Linear(64 * 7 * 7, 128)
-            self.fc2 = nn.Linear(128, num_classes)
-            
-            # Dropout
-            self.dropout = nn.Dropout(dropout_rate)
-            
-        def forward(self, x):
-            # First conv block: 28x28 -> 14x14
-            x = self.pool(F.relu(self.conv1(x)))
-            
-            # Second conv block: 14x14 -> 7x7
-            x = self.pool(F.relu(self.conv2(x)))
-            
-            # Flatten: 7x7x64 -> 3136
-            x = x.view(-1, 64 * 7 * 7)
-            
-            # Fully connected layers with dropout
-            x = F.relu(self.fc1(x))
-            x = self.dropout(x)
-            x = self.fc2(x)
-            
-            return x
-
-    # Create model instance
-    model = MNISTNet(num_classes=10, dropout_rate=0.3)
-
-    # Print model summary
-    def count_parameters(model):
-        return sum(p.numel() for p in model.parameters() if p.requires_grad)
-
-    print(f"Model has {count_parameters(model):,} trainable parameters")
-
-Step 4: Define Custom Metrics
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 4: Define Simple Accuracy Metric
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
     def accuracy(predictions, targets):
-        """Calculate accuracy."""
+        """Calculate classification accuracy."""
         pred_classes = torch.argmax(predictions, dim=1)
         return (pred_classes == targets).float().mean().item()
 
-    def top_2_accuracy(predictions, targets):
-        """Calculate top-2 accuracy."""
-        _, top_2_preds = torch.topk(predictions, 2, dim=1)
-        targets_expanded = targets.view(-1, 1).expand_as(top_2_preds)
-        correct = (top_2_preds == targets_expanded).any(dim=1)
-        return correct.float().mean().item()
-
-    # Custom metrics dictionary
-    custom_metrics = {
-        'accuracy': accuracy,
-        'top2_accuracy': top_2_accuracy
-    }
-
-Step 5: Training Configuration
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 5: Train the CNN
+^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
-    # Optimizer configuration
-    optimizer_config = OptimizerConfig(
-        optimizer_class="Adam",
-        lr=0.001,
-        weight_decay=1e-4
-    )
-
-    # Training configuration
+    # Simple training configuration
     config = TrainingConfig(
-        epochs=20,
+        epochs=10,
         device="auto",
-        mixed_precision=True,
-        
-        # Validation settings
-        validation_frequency=1,
-        log_frequency=100,
-        
-        # Early stopping
-        early_stopping_patience=5,
-        early_stopping_min_delta=0.001,
-        
-        # Checkpointing
-        checkpoint_dir="./checkpoints/mnist",
-        save_best_model=True,
-        save_last_model=True,
-        
-        # Optimizer
-        optimizer=optimizer_config
+        early_stopping_patience=3
     )
-
-Step 6: Setup Callbacks
-^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-    from treadmill.callbacks import EarlyStopping, ModelCheckpoint
-
-    # Early stopping callback
-    early_stopping = EarlyStopping(
-        monitor='val_loss',
-        patience=7,
-        min_delta=0.0001,
-        verbose=True,
-        mode='min'
-    )
-
-    # Model checkpoint callback
-    model_checkpoint = ModelCheckpoint(
-        filepath='./checkpoints/mnist/best_model_{epoch:02d}_{val_acc:.4f}.pt',
-        monitor='val_accuracy',
-        save_best_only=True,
-        mode='max',
-        verbose=True
-    )
-
-    callbacks = [early_stopping, model_checkpoint]
-
-Step 7: Training
-^^^^^^^^^^^^^^^^
-
-.. code-block:: python
 
     # Create trainer
     trainer = Trainer(
         model=model,
         config=config,
         train_dataloader=train_loader,
-        val_dataloader=val_loader,
+        val_dataloader=test_loader,
         loss_fn=nn.CrossEntropyLoss(),
-        metric_fns=custom_metrics,
-        callbacks=callbacks
+        metric_fns={'accuracy': accuracy}
     )
 
-    # Display training info
-    print("🚀 Starting MNIST Training")
-    print(f"Device: {trainer.device}")
-    print(f"Model parameters: {count_parameters(model):,}")
-    print("-" * 50)
-
     # Train the model
+    print("🚀 Training CNN on MNIST...")
     history = trainer.fit()
 
-    print("✅ Training completed!")
+    # Evaluate on test set
+    test_results = trainer.evaluate(test_loader)
+    print(f"\n📊 Test Results:")
+    print(f"  Test Loss: {test_results['loss']:.4f}")
+    print(f"  Test Accuracy: {test_results['accuracy']:.4f}")
 
-Step 8: Visualize Training Results
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 6: Visualize Training Progress
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
     def plot_training_history(history):
-        """Plot training and validation metrics."""
-        fig, axes = plt.subplots(2, 2, figsize=(15, 10))
+        """Plot training history."""
+        fig, axes = plt.subplots(1, 2, figsize=(12, 5))
         
-        # Loss plot
-        axes[0, 0].plot(history['train_loss'], label='Training Loss', color='blue')
+        # Plot loss
+        axes[0].plot(history['train_loss'], label='Training Loss', color='blue')
         if 'val_loss' in history:
-            axes[0, 0].plot(history['val_loss'], label='Validation Loss', color='red')
-        axes[0, 0].set_title('Model Loss')
-        axes[0, 0].set_xlabel('Epoch')
-        axes[0, 0].set_ylabel('Loss')
-        axes[0, 0].legend()
-        axes[0, 0].grid(True, alpha=0.3)
+            axes[0].plot(history['val_loss'], label='Validation Loss', color='red')
+        axes[0].set_title('Training Loss')
+        axes[0].set_xlabel('Epoch')
+        axes[0].set_ylabel('Loss')
+        axes[0].legend()
+        axes[0].grid(True, alpha=0.3)
         
-        # Accuracy plot
-        axes[0, 1].plot(history['train_accuracy'], label='Training Accuracy', color='blue')
+        # Plot accuracy
+        if 'train_accuracy' in history:
+            axes[1].plot(history['train_accuracy'], label='Training Accuracy', color='blue')
         if 'val_accuracy' in history:
-            axes[0, 1].plot(history['val_accuracy'], label='Validation Accuracy', color='red')
-        axes[0, 1].set_title('Model Accuracy')
-        axes[0, 1].set_xlabel('Epoch')
-        axes[0, 1].set_ylabel('Accuracy')
-        axes[0, 1].legend()
-        axes[0, 1].grid(True, alpha=0.3)
-        
-        # Top-2 Accuracy plot
-        axes[1, 0].plot(history['train_top2_accuracy'], label='Training Top-2', color='blue')
-        if 'val_top2_accuracy' in history:
-            axes[1, 0].plot(history['val_top2_accuracy'], label='Validation Top-2', color='red')
-        axes[1, 0].set_title('Top-2 Accuracy')
-        axes[1, 0].set_xlabel('Epoch')
-        axes[1, 0].set_ylabel('Accuracy')
-        axes[1, 0].legend()
-        axes[1, 0].grid(True, alpha=0.3)
-        
-        # Training progress summary
-        axes[1, 1].text(0.1, 0.9, f"Final Training Loss: {history['train_loss'][-1]:.4f}", 
-                       transform=axes[1, 1].transAxes, fontsize=12)
-        axes[1, 1].text(0.1, 0.8, f"Final Validation Loss: {history['val_loss'][-1]:.4f}", 
-                       transform=axes[1, 1].transAxes, fontsize=12)
-        axes[1, 1].text(0.1, 0.7, f"Best Training Accuracy: {max(history['train_accuracy']):.4f}", 
-                       transform=axes[1, 1].transAxes, fontsize=12)
-        axes[1, 1].text(0.1, 0.6, f"Best Validation Accuracy: {max(history['val_accuracy']):.4f}", 
-                       transform=axes[1, 1].transAxes, fontsize=12)
-        axes[1, 1].set_title('Training Summary')
-        axes[1, 1].axis('off')
+            axes[1].plot(history['val_accuracy'], label='Validation Accuracy', color='red')
+        axes[1].set_title('Training Accuracy')
+        axes[1].set_xlabel('Epoch')
+        axes[1].set_ylabel('Accuracy')
+        axes[1].legend()
+        axes[1].grid(True, alpha=0.3)
         
         plt.tight_layout()
         plt.show()
@@ -346,208 +222,197 @@ Step 8: Visualize Training Results
     # Plot the training history
     plot_training_history(history)
 
-Step 9: Model Evaluation
-^^^^^^^^^^^^^^^^^^^^^^^^^
+Step 7: Test Individual Predictions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. code-block:: python
 
-    # Evaluate on test set
-    print("📊 Evaluating on test set...")
-    test_results = trainer.evaluate(test_loader)
-
-    print("\n🎯 Test Results:")
-    for metric_name, value in test_results.items():
-        print(f"  {metric_name.replace('_', ' ').title()}: {value:.4f}")
-
-Step 10: Confusion Matrix and Analysis
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-    from sklearn.metrics import confusion_matrix, classification_report
-    import seaborn as sns
-
-    def detailed_evaluation(trainer, test_loader):
-        """Generate detailed evaluation including confusion matrix."""
+    def test_predictions(model, test_dataset, num_samples=8):
+        """Test model predictions on individual samples."""
+        model.eval()
         
-        all_predictions = []
-        all_targets = []
-        
-        trainer.model.eval()
-        with torch.no_grad():
-            for data, target in test_loader:
-                data = data.to(trainer.device)
-                output = trainer.model(data)
-                pred = torch.argmax(output, dim=1)
-                
-                all_predictions.extend(pred.cpu().numpy())
-                all_targets.extend(target.numpy())
-        
-        # Classification report
-        class_names = [str(i) for i in range(10)]
-        print("\n📋 Classification Report:")
-        print(classification_report(all_targets, all_predictions, target_names=class_names))
-        
-        # Confusion matrix
-        cm = confusion_matrix(all_targets, all_predictions)
-        
-        plt.figure(figsize=(10, 8))
-        sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
-                   xticklabels=class_names, yticklabels=class_names)
-        plt.title('Confusion Matrix')
-        plt.xlabel('Predicted Label')
-        plt.ylabel('True Label')
-        plt.show()
-        
-        return cm
-
-    # Generate detailed evaluation
-    confusion_mat = detailed_evaluation(trainer, test_loader)
-
-Step 11: Visualize Misclassified Examples
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. code-block:: python
-
-    def visualize_mistakes(trainer, test_loader, num_examples=12):
-        """Visualize misclassified examples."""
-        
-        mistakes = []
-        trainer.model.eval()
+        fig, axes = plt.subplots(2, 4, figsize=(12, 6))
+        fig.suptitle('Model Predictions')
         
         with torch.no_grad():
-            for data, target in test_loader:
-                data, target = data.to(trainer.device), target.to(trainer.device)
-                output = trainer.model(data)
-                pred = torch.argmax(output, dim=1)
-                probs = F.softmax(output, dim=1)
+            for i in range(num_samples):
+                # Get sample
+                image, true_label = test_dataset[i]
                 
-                # Find misclassified examples
-                mask = pred != target
-                if mask.any():
-                    for i in range(data.size(0)):
-                        if mask[i] and len(mistakes) < num_examples:
-                            mistakes.append({
-                                'image': data[i].cpu(),
-                                'true': target[i].item(),
-                                'pred': pred[i].item(),
-                                'confidence': probs[i][pred[i]].item()
-                            })
+                # Make prediction
+                image_batch = image.unsqueeze(0)  # Add batch dimension
+                output = model(image_batch)
+                predicted_label = torch.argmax(output, dim=1).item()
+                confidence = F.softmax(output, dim=1).max().item()
                 
-                if len(mistakes) >= num_examples:
-                    break
-        
-        # Plot misclassified examples
-        fig, axes = plt.subplots(3, 4, figsize=(12, 9))
-        fig.suptitle('Misclassified Examples', fontsize=16, fontweight='bold')
-        
-        for i, mistake in enumerate(mistakes):
-            ax = axes[i // 4, i % 4]
-            
-            # Denormalize image
-            image = mistake['image'].squeeze()
-            image = image * 0.3081 + 0.1307
-            
-            ax.imshow(image, cmap='gray')
-            ax.set_title(f"True: {mistake['true']}, Pred: {mistake['pred']}\n"
-                        f"Confidence: {mistake['confidence']:.2f}")
-            ax.axis('off')
+                # Plot
+                ax = axes[i // 4, i % 4]
+                
+                # Denormalize image for display
+                image_np = image.squeeze().numpy()
+                image_np = image_np * 0.3081 + 0.1307
+                
+                ax.imshow(image_np, cmap='gray')
+                
+                # Color code: green if correct, red if wrong
+                color = 'green' if predicted_label == true_label else 'red'
+                ax.set_title(f'True: {true_label}, Pred: {predicted_label}\n'
+                           f'Confidence: {confidence:.2f}', color=color)
+                ax.axis('off')
         
         plt.tight_layout()
         plt.show()
 
-    # Visualize mistakes
-    visualize_mistakes(trainer, test_loader)
+    # Test some predictions
+    test_predictions(model, test_dataset)
 
-Step 12: Model Saving and Loading
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Understanding CNN Components
+----------------------------
 
-.. code-block:: python
-
-    # Save the complete model
-    model_path = './models/mnist_model.pt'
-    torch.save({
-        'model_state_dict': model.state_dict(),
-        'model_config': {'num_classes': 10, 'dropout_rate': 0.3},
-        'training_history': history,
-        'test_results': test_results
-    }, model_path)
-
-    print(f"✅ Model saved to {model_path}")
-
-    # Function to load and use the saved model
-    def load_model(model_path, device='cpu'):
-        """Load the trained model."""
-        checkpoint = torch.load(model_path, map_location=device)
-        
-        model = MNISTNet(**checkpoint['model_config'])
-        model.load_state_dict(checkpoint['model_state_dict'])
-        model.to(device)
-        model.eval()
-        
-        return model, checkpoint
-
-    # Example usage
-    # loaded_model, checkpoint = load_model(model_path)
-
-Step 13: Inference Function
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+**🧠 What Each Layer Does:**
 
 .. code-block:: python
 
-    def predict_digit(model, image_tensor, device='cpu'):
-        """Predict digit from image tensor."""
-        model.eval()
-        with torch.no_grad():
-            if len(image_tensor.shape) == 3:
-                image_tensor = image_tensor.unsqueeze(0)  # Add batch dimension
+    def explain_cnn_layers():
+        """Explain CNN layer transformations."""
+        print("CNN Layer Analysis:")
+        print("==================")
+        print("Input: 1 x 28 x 28 (1 channel, 28x28 pixels)")
+        print()
+        print("Conv1 + Pool1:")
+        print("  Conv2d(1 → 32): 1x28x28 → 32x28x28")
+        print("  MaxPool2d:       32x28x28 → 32x14x14")
+        print()
+        print("Conv2 + Pool2:")
+        print("  Conv2d(32 → 64): 32x14x14 → 64x14x14") 
+        print("  MaxPool2d:        64x14x14 → 64x7x7")
+        print()
+        print("Flatten:")
+        print("  Reshape: 64x7x7 → 3136")
+        print()
+        print("Fully Connected:")
+        print("  Linear: 3136 → 128 → 10")
+
+    explain_cnn_layers()
+
+**🎯 Key CNN Concepts:**
+
+.. code-block:: python
+
+    # Basic CNN building blocks
+    """
+    Convolution (nn.Conv2d):
+    - Detects features like edges, shapes
+    - Preserves spatial relationships
+    - kernel_size: size of the filter
+    - padding: adds zeros around input
+    
+    Pooling (nn.MaxPool2d):
+    - Reduces spatial dimensions
+    - Makes model translation invariant
+    - Reduces computational cost
+    
+    Activation (F.relu):
+    - Adds non-linearity
+    - Allows learning complex patterns
+    
+    Fully Connected (nn.Linear):
+    - Combines all features for classification
+    - Maps to output classes
+    """
+
+Simple Model Variations
+-----------------------
+
+**🔧 Deeper CNN:**
+
+.. code-block:: python
+
+    class DeeperCNN(nn.Module):
+        """Deeper CNN with more layers."""
+        
+        def __init__(self):
+            super().__init__()
+            self.conv1 = nn.Conv2d(1, 16, 3, padding=1)
+            self.conv2 = nn.Conv2d(16, 32, 3, padding=1)
+            self.conv3 = nn.Conv2d(32, 64, 3, padding=1)
+            self.pool = nn.MaxPool2d(2)
             
-            image_tensor = image_tensor.to(device)
-            output = model(image_tensor)
-            probabilities = F.softmax(output, dim=1)
+            self.fc1 = nn.Linear(64 * 3 * 3, 128)  # After 3 pooling: 28->14->7->3
+            self.fc2 = nn.Linear(128, 10)
+            self.dropout = nn.Dropout(0.5)
             
-            predicted_digit = torch.argmax(output, dim=1).item()
-            confidence = probabilities[0][predicted_digit].item()
+        def forward(self, x):
+            x = self.pool(F.relu(self.conv1(x)))  # 28->14
+            x = self.pool(F.relu(self.conv2(x)))  # 14->7
+            x = self.pool(F.relu(self.conv3(x)))  # 7->3
             
-            return predicted_digit, confidence, probabilities[0]
+            x = x.view(-1, 64 * 3 * 3)
+            x = F.relu(self.fc1(x))
+            x = self.dropout(x)
+            x = self.fc2(x)
+            return x
 
-    # Example inference (using a test sample)
-    # test_image, test_label = test_dataset[0]
-    # predicted_digit, confidence, probs = predict_digit(model, test_image, trainer.device)
-    # print(f"Predicted: {predicted_digit}, Actual: {test_label}, Confidence: {confidence:.4f}")
+**🔧 CNN with Batch Normalization:**
 
-Summary
--------
+.. code-block:: python
 
-**What we accomplished:**
+    class BatchNormCNN(nn.Module):
+        """CNN with batch normalization for stable training."""
+        
+        def __init__(self):
+            super().__init__()
+            self.conv1 = nn.Conv2d(1, 32, 3, padding=1)
+            self.bn1 = nn.BatchNorm2d(32)
+            
+            self.conv2 = nn.Conv2d(32, 64, 3, padding=1)
+            self.bn2 = nn.BatchNorm2d(64)
+            
+            self.pool = nn.MaxPool2d(2)
+            self.fc1 = nn.Linear(64 * 7 * 7, 128)
+            self.fc2 = nn.Linear(128, 10)
+            
+        def forward(self, x):
+            x = self.pool(F.relu(self.bn1(self.conv1(x))))
+            x = self.pool(F.relu(self.bn2(self.conv2(x))))
+            
+            x = x.view(-1, 64 * 7 * 7)
+            x = F.relu(self.fc1(x))
+            x = self.fc2(x)
+            return x
 
-✅ Built a complete MNIST digit classification system
-✅ Implemented CNN with proper architecture
-✅ Used data augmentation for better generalization
-✅ Applied early stopping and model checkpointing
-✅ Performed comprehensive evaluation with visualizations
-✅ Created reusable inference functions
+Key Takeaways
+-------------
 
-**Key Results:**
+**🎯 CNN Basics:**
 
-- **Test Accuracy**: ~98-99% (typical for MNIST)
-- **Model Size**: ~100K parameters (lightweight and efficient)
-- **Training Time**: ~5-10 minutes on GPU
+✅ **Convolution**: Feature detection with learnable filters
+✅ **Pooling**: Spatial dimension reduction and translation invariance  
+✅ **Architecture**: Conv layers → Pooling → Fully connected
+✅ **MNIST Performance**: Simple CNNs achieve ~98-99% accuracy
 
-**Best Practices Demonstrated:**
+**📊 CNN vs Dense Networks:**
 
-1. **Data Preparation**: Proper normalization and augmentation
-2. **Model Architecture**: Simple but effective CNN design
-3. **Training Process**: Early stopping, checkpointing, validation
-4. **Evaluation**: Confusion matrix, error analysis, visualizations
-5. **Deployment**: Model saving and inference pipeline
+- **CNNs**: Better for images, preserve spatial relationships
+- **Dense**: Better for tabular data, fully connected layers
+- **Parameters**: CNNs usually have fewer parameters for images
+- **Translation**: CNNs handle shifted/rotated images better
 
-This example provides a solid foundation for digit recognition tasks and can be easily extended to other image classification problems! 🚀
+**⚙️ Training Tips:**
+
+1. **Start Simple**: Begin with 2-3 conv layers
+2. **Use Pooling**: Reduce dimensions progressively  
+3. **Add Dropout**: Prevent overfitting in FC layers
+4. **Normalize Data**: Always normalize input images
+5. **Monitor Validation**: Watch for overfitting
+
+This basic CNN example shows how Treadmill makes convolutional network training simple and straightforward! 🏃‍♀️‍➡️
 
 Next Steps
 ----------
 
-- Try different architectures (ResNet, DenseNet)
-- Experiment with other datasets (Fashion-MNIST, EMNIST)
-- Implement ensemble methods
-- Deploy the model as a web service 
+Ready for more advanced techniques? Check out:
+
+- :doc:`advanced_usage` - Advanced CNN architectures and training techniques
+- :doc:`../tutorials/image_classification` - Complete image classification project
+- :doc:`encoder_decoder` - Different architecture patterns 

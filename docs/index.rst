@@ -149,10 +149,10 @@ This documentation is organized into several sections to help you get the most o
    :hidden:
 
    examples/basic_usage
-   examples/advanced_usage
    examples/simple_dnn
-   examples/encoder_decoder
+   examples/advanced_usage
    examples/mnist
+   examples/encoder_decoder
 
 .. toctree::
    :maxdepth: 2
