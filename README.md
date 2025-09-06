@@ -1,5 +1,9 @@
 # 🏃‍♀️‍➡️ Treadmill 🏃‍♀️‍➡️
 
+<div align="center">
+  <img src="treadmill.png" alt="Treadmill Training Framework" width="300"/>
+</div>
+
 **A Clean and Modular PyTorch Training Framework**
 
 Treadmill is a lightweight, modular training framework specifically designed for PyTorch. It provides clean, easy-to-understand training loops with beautiful output formatting while maintaining the power and flexibility of vanilla PyTorch.
