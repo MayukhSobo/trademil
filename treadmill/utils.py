@@ -14,121 +14,42 @@ from rich import box
 console = Console()
 
 
-def detect_environment() -> str:
-    """Detect the current environment and return appropriate theme info."""
-    try:
-        import os
-        
-        # Check if we're in Google Colab
-        try:
-            import google.colab
-            return 'colab'
-        except ImportError:
-            pass
-            
-        # Check if we're in Jupyter
-        try:
-            from IPython import get_ipython
-            if get_ipython() is not None:
-                return 'jupyter'
-        except ImportError:
-            pass
-        
-        # Check common environment variables for regular terminals
-        term_program = os.environ.get('TERM_PROGRAM', '').lower()
-        colorterm = os.environ.get('COLORTERM', '').lower()
-        term = os.environ.get('TERM', '').lower()
-        
-        # Some heuristics for light themes in regular terminals
-        light_indicators = [
-            'light' in term,
-            'bright' in term,
-            os.environ.get('TERMINAL_THEME', '').lower() == 'light'
-        ]
-        
-        if any(light_indicators):
-            return 'light'
-        
-        # Default to dark theme (most common for developers)
-        return 'dark'
-        
-    except:
-        return 'dark'  # Safe fallback
-
-
-def get_adaptive_colors():
-    """Get colors that work well across all environments."""
-    env = detect_environment()
-    
-    # Universal colors that work well in Google Colab, Jupyter, and terminals
-    if env in ['colab', 'jupyter']:
-        # Optimized for notebook environments (both light and dark themes)
-        return {
-            'header': 'bold blue',
-            'epoch': 'bold cyan',
-            'train': 'bold green',
-            'val': 'bold magenta',
-            'metric': 'bold white',
-            'improvement': 'bold green',
-            'regression': 'bold red',
-            'warning': 'bold yellow',
-            'success': 'bold green',
-            'info': 'bold blue'
-        }
-    elif env == 'light':
-        # Light terminal theme
-        return {
-            'header': 'blue',
-            'epoch': 'blue', 
-            'train': 'dark_green',
-            'val': 'dark_magenta',
-            'metric': 'black',
-            'improvement': 'dark_green',
-            'regression': 'red',
-            'warning': 'dark_orange',
-            'success': 'dark_green',
-            'info': 'blue'
-        }
-    else:
-        # Dark terminal theme
-        return {
-            'header': 'cyan',
-            'epoch': 'cyan',
-            'train': 'green', 
-            'val': 'magenta',
-            'metric': 'white',
-            'improvement': 'green',
-            'regression': 'red',
-            'warning': 'yellow',
-            'success': 'green',
-            'info': 'cyan'
-        }
-
-
-# Get adaptive colors for current environment
-COLORS = get_adaptive_colors()
-
-
-def set_color_theme(color_dict: Optional[Dict[str, str]] = None, environment: Optional[str] = None):
+def get_universal_colors():
     """
-    Override color theme for different environments.
+    Universal colors that work well across all environments and backgrounds.
+    These colors provide good contrast on both light and dark backgrounds.
+    """
+    return {
+        'header': 'bold blue',           # Blue works well on both backgrounds
+        'epoch': 'bold magenta',         # Magenta has good contrast everywhere
+        'train': 'green',                # Green for training (positive action)
+        'val': 'blue',                   # Blue for validation
+        'metric': 'default',             # Default terminal color (adapts automatically)
+        'improvement': 'green',          # Green for improvements
+        'regression': 'red',             # Red for regressions
+        'warning': 'yellow',             # Yellow for warnings
+        'success': 'green',              # Green for success
+        'info': 'cyan'                   # Cyan for info
+    }
+
+
+# Universal colors for all environments
+COLORS = get_universal_colors()
+
+
+def set_color_theme(color_dict: Optional[Dict[str, str]] = None):
+    """
+    Override color theme with custom colors.
     
     Args:
         color_dict: Custom color dictionary to use
-        environment: Force environment type ('colab', 'jupyter', 'light', 'dark')
     """
     global COLORS
     
     if color_dict:
         COLORS.update(color_dict)
-    elif environment:
-        # Temporarily override environment detection
-        original_detect = detect_environment
-        globals()['detect_environment'] = lambda: environment
-        COLORS = get_adaptive_colors()
-        globals()['detect_environment'] = original_detect
     else:
-        COLORS = get_adaptive_colors()
+        COLORS = get_universal_colors()
 
 
 def format_time(seconds: float) -> str:
