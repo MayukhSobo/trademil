@@ -222,6 +222,18 @@ class Trainer:
             "total_epochs": self.current_epoch + 1
         }
     
+    def fit(self) -> Dict[str, Any]:
+        """
+        Alias for train() method for sklearn-style compatibility.
+        
+        Many users expect a fit() method from sklearn/other ML libraries.
+        This method simply calls train() for compatibility.
+        
+        Returns:
+            Dictionary containing training history and final metrics
+        """
+        return self.train()
+    
     def _train_epoch(self, epoch: int) -> Dict[str, float]:
         """Execute one training epoch."""
         self.model.train()
