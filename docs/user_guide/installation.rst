@@ -24,7 +24,36 @@ System Requirements
 Installation Methods
 --------------------
 
-Method 1: From Source (Recommended)
+Method 1: From PyPI (Recommended)
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+The easiest way to install Treadmill is from PyPI:
+
+.. code-block:: bash
+
+    # Basic installation
+    pip install treadmill
+
+**Advantages:**
+- Quick and simple installation
+- Stable, tested releases
+- Automatic dependency management
+- Perfect for most users
+
+**With Optional Dependencies:**
+
+.. code-block:: bash
+
+    # With examples dependencies (torchvision, scikit-learn)
+    pip install "treadmill[examples]"
+    
+    # With full dependencies (visualization tools, docs, etc.)
+    pip install "treadmill[full]"
+    
+    # For development
+    pip install "treadmill[dev]"
+
+Method 2: From Source (Development)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 This method gives you access to the latest features and allows easy contribution.
@@ -43,7 +72,7 @@ This method gives you access to the latest features and allows easy contribution
 - Easy to modify and contribute
 - Full access to examples and documentation
 
-Method 2: Install with Optional Dependencies
+Method 3: Install with Optional Dependencies (Development)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 For different use cases, you can install Treadmill with various optional dependencies:
@@ -168,6 +197,16 @@ Verification
 ------------
 
 After installation, verify that everything works correctly:
+
+**Quick PyPI Installation Test:**
+
+.. code-block:: bash
+
+    # Install from PyPI
+    pip install treadmill
+    
+    # Test basic import
+    python -c "import treadmill; print(f'Treadmill {treadmill.__version__} installed successfully!')"
 
 **Basic Verification:**
 
@@ -294,7 +333,10 @@ Treadmill works out of the box on Google Colab:
 
 .. code-block:: python
 
-    # In a Colab cell
+    # In a Colab cell (PyPI installation - recommended)
+    !pip install treadmill
+    
+    # Or from source for latest features
     !git clone https://github.com/MayukhSobo/treadmill.git
     %cd treadmill
     !pip install -e .

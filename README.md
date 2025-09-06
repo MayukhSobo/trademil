@@ -22,7 +22,28 @@ Treadmill is a lightweight, modular training framework specifically designed for
 
 ## 🛠️ Installation
 
+### From PyPI (Recommended)
+
+```bash
+pip install treadmill
+```
+
+### Install with Optional Dependencies
+
+```bash
+# With examples dependencies (torchvision, scikit-learn)
+pip install "treadmill[examples]"
+
+# With full dependencies (visualization tools, docs, etc.)
+pip install "treadmill[full]"
+
+# For development
+pip install "treadmill[dev]"
+```
+
 ### From Source
+
+For the latest development version or to contribute:
 
 ```bash
 git clone https://github.com/MayukhSobo/treadmill.git
@@ -30,13 +51,13 @@ cd treadmill
 pip install -e .
 ```
 
-### Install with Examples
+### Install with Examples (Development)
 
 ```bash
 pip install -e ".[examples]"  # Includes torchvision and additional dependencies
 ```
 
-### Install Full Version
+### Install Full Version (Development)
 
 ```bash
 pip install -e ".[full]"  # Includes all optional dependencies
