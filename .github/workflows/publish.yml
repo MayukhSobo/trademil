@@ -95,9 +95,9 @@ jobs:
         TAG_NAME="${{ steps.release_info.outputs.tag_name }}"
         VERSION="${TAG_NAME#v}"  # Remove 'v' prefix to get version number
         
-        echo "🎉 Successfully published treadmill $TAG_NAME to PyPI!"
-        echo "📦 Install with: pip install treadmill==$VERSION"
-        echo "🔗 PyPI: https://pypi.org/project/treadmill/"
+        echo "🎉 Successfully published pytorch-treadmill $TAG_NAME to PyPI!"
+        echo "📦 Install with: pip install pytorch-treadmill==$VERSION"
+        echo "🔗 PyPI: https://pypi.org/project/pytorch-treadmill/"
         echo ""
         echo "✅ Workflow Chain Complete:"
         echo "  ✅ 1. CI tests passed"

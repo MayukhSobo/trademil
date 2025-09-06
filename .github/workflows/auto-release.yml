@@ -233,14 +233,14 @@ jobs:
         ## 📦 Installation
         
         \`\`\`bash
-        pip install treadmill==${{ steps.get_version.outputs.version }}
+        pip install pytorch-treadmill==${{ steps.get_version.outputs.version }}
         \`\`\`
         
         **With optional dependencies:**
         \`\`\`bash
-        pip install "treadmill[examples]==${{ steps.get_version.outputs.version }}"  # Examples
-        pip install "treadmill[full]==${{ steps.get_version.outputs.version }}"     # Full features
-        pip install "treadmill[dev]==${{ steps.get_version.outputs.version }}"      # Development
+        pip install "pytorch-treadmill[examples]==${{ steps.get_version.outputs.version }}"  # Examples
+        pip install "pytorch-treadmill[full]==${{ steps.get_version.outputs.version }}"     # Full features
+        pip install "pytorch-treadmill[dev]==${{ steps.get_version.outputs.version }}"      # Development
         \`\`\`
         
         ## 🔗 Links
@@ -312,7 +312,7 @@ jobs:
         echo "🎉 Created and published release ${{ steps.get_version.outputs.tag }}"
         echo "🔄 This should now trigger the 'Publish to PyPI' workflow"
         echo "📦 PyPI publish will happen automatically via the publish workflow"
-        echo "🚀 Once published, users can install with: pip install treadmill==${{ steps.get_version.outputs.version }}"
+        echo "🚀 Once published, users can install with: pip install pytorch-treadmill==${{ steps.get_version.outputs.version }}"
         echo ""
         echo "📋 Workflow Chain Status:"
         echo "  ✅ 1. CI tests passed (triggered this workflow)"

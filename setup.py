@@ -13,14 +13,14 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
     requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
 setup(
-    name="treadmill",
+    name="pytorch-treadmill",
     version="0.2.0",
     author="Treadmill Team",
     author_email="",
     description="A Clean and Modular PyTorch Training Framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/treadmill",
+    url="https://github.com/MayukhSobo/treadmill",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -66,8 +66,8 @@ setup(
     },
     keywords="pytorch, deep learning, training, machine learning, neural networks",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/treadmill/issues",
-        "Source": "https://github.com/yourusername/treadmill",
-        "Documentation": "https://treadmill.readthedocs.io/",
+        "Bug Reports": "https://github.com/MayukhSobo/treadmill/issues",
+        "Source": "https://github.com/MayukhSobo/treadmill",
+        "Documentation": "https://mayukhsobo.github.io/treadmill/",
     },
 ) 

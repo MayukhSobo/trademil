@@ -32,7 +32,7 @@ The easiest way to install Treadmill is from PyPI:
 .. code-block:: bash
 
     # Basic installation
-    pip install treadmill
+    pip install pytorch-treadmill
 
 **Advantages:**
 - Quick and simple installation
@@ -45,13 +45,13 @@ The easiest way to install Treadmill is from PyPI:
 .. code-block:: bash
 
     # With examples dependencies (torchvision, scikit-learn)
-    pip install "treadmill[examples]"
+    pip install "pytorch-treadmill[examples]"
     
     # With full dependencies (visualization tools, docs, etc.)
-    pip install "treadmill[full]"
+    pip install "pytorch-treadmill[full]"
     
     # For development
-    pip install "treadmill[dev]"
+    pip install "pytorch-treadmill[dev]"
 
 Method 2: From Source (Development)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -203,7 +203,7 @@ After installation, verify that everything works correctly:
 .. code-block:: bash
 
     # Install from PyPI
-    pip install treadmill
+    pip install pytorch-treadmill
     
     # Test basic import
     python -c "import treadmill; print(f'Treadmill {treadmill.__version__} installed successfully!')"
@@ -334,7 +334,7 @@ Treadmill works out of the box on Google Colab:
 .. code-block:: python
 
     # In a Colab cell (PyPI installation - recommended)
-    !pip install treadmill
+    !pip install pytorch-treadmill
     
     # Or from source for latest features
     !git clone https://github.com/MayukhSobo/treadmill.git

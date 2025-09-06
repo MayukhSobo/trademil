@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "treadmill"
+name = "pytorch-treadmill"
 version = "0.2.0"
 description = "A Clean and Modular PyTorch Training Framework"
 readme = "README.md"
@@ -66,10 +66,10 @@ full = [
 ]
 
 [project.urls]
-homepage = "https://github.com/yourusername/treadmill"
-documentation = "https://treadmill.readthedocs.io/"
-repository = "https://github.com/yourusername/treadmill"
-changelog = "https://github.com/yourusername/treadmill/blob/main/CHANGELOG.md"
+homepage = "https://github.com/MayukhSobo/treadmill"
+documentation = "https://mayukhsobo.github.io/treadmill/"
+repository = "https://github.com/MayukhSobo/treadmill"
+changelog = "https://github.com/MayukhSobo/treadmill/blob/main/CHANGELOG.md"
 
 [tool.black]
 line-length = 88
