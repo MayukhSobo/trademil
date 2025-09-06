@@ -148,11 +148,11 @@ This documentation is organized into several sections to help you get the most o
    :caption: Examples
    :hidden:
 
+   examples/basic_usage
+   examples/advanced_usage
+   examples/simple_dnn
+   examples/encoder_decoder
    examples/mnist
-   examples/cifar10
-   examples/nlp_sentiment
-   examples/custom_architectures
-   examples/advanced_training
 
 .. toctree::
    :maxdepth: 2
