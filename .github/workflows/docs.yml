@@ -155,6 +155,9 @@ jobs:
     - name: Setup Pages
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: actions/configure-pages@v4
+      with:
+        # Enable Pages if not already enabled
+        enablement: true
     
     - name: Upload artifact
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
