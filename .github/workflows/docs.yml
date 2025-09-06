@@ -11,6 +11,8 @@ permissions:
   contents: read
   pages: write
   id-token: write
+  actions: read
+  deployments: write
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -155,9 +157,6 @@ jobs:
     - name: Setup Pages
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
       uses: actions/configure-pages@v4
-      with:
-        # Enable Pages if not already enabled
-        enablement: true
     
     - name: Upload artifact
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
