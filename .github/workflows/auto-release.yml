@@ -37,6 +37,16 @@ jobs:
         fetch-depth: 0  # Fetch full history for proper versioning
         ref: ${{ github.event.workflow_run.head_sha || github.sha }}
     
+    - name: Debug workflow context
+      run: |
+        echo "🔍 Workflow Debug Info:"
+        echo "Event name: ${{ github.event_name }}"
+        echo "Head SHA: ${{ github.event.workflow_run.head_sha || 'N/A' }}"
+        echo "Head branch: ${{ github.event.workflow_run.head_branch || 'N/A' }}"
+        echo "Conclusion: ${{ github.event.workflow_run.conclusion || 'N/A' }}"
+        echo "Current SHA: ${{ github.sha }}"
+        echo "Current ref: ${{ github.ref }}"
+    
     - name: Configure git and sync with latest
       run: |
         git config --local user.email "action@github.com"
@@ -44,8 +54,11 @@ jobs:
         
         echo "🔄 Ensuring we have the absolute latest main branch..."
         git fetch origin main
-        git reset --hard origin/main
         
+        # Ensure we're on the main branch, not in detached HEAD
+        git checkout -B main origin/main
+        
+        echo "📍 Current branch: $(git branch --show-current)"
         echo "📍 Current commit: $(git rev-parse HEAD)"
         echo "📍 Latest commit: $(git rev-parse origin/main)"
     
@@ -139,6 +152,9 @@ jobs:
       run: |
         echo "🔄 Pulling latest changes before pushing..."
         
+        # Ensure we're tracking the remote branch properly
+        git branch --set-upstream-to=origin/main main
+        
         # Try to pull and rebase, handling conflicts if they occur
         if ! git pull --rebase origin main; then
           echo "⚠️  Rebase conflicts detected. Attempting to resolve..."
@@ -156,8 +172,13 @@ jobs:
           fi
         fi
         
+        echo "🔍 Verifying branch and remote setup..."
+        echo "Current branch: $(git branch --show-current)"
+        echo "Remote tracking: $(git config --get branch.main.remote || echo 'none')"
+        echo "Remote merge: $(git config --get branch.main.merge || echo 'none')"
+        
         echo "🚀 Pushing version bump..."
-        git push origin main
+        git push origin HEAD:main
     
     - name: Check if release exists
       id: check_release
