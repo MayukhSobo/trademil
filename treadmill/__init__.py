@@ -12,7 +12,7 @@ from .trainer import Trainer
 from .config import TrainingConfig, OptimizerConfig, SchedulerConfig
 from .metrics import MetricsTracker
 from .callbacks import Callback, EarlyStopping, ModelCheckpoint
-from .utils import format_time, format_metrics
+from .utils import format_time, format_metrics, set_color_theme
 
 __all__ = [
     "Trainer",
@@ -24,5 +24,6 @@ __all__ = [
     "EarlyStopping",
     "ModelCheckpoint",
     "format_time",
-    "format_metrics"
+    "format_metrics",
+    "set_color_theme"
 ] 
