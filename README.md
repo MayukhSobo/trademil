@@ -1,4 +1,4 @@
-# 🚀 Trademil
+# 🏃‍♀️‍➡️ Trademil 🏃‍♀️‍➡️
 
 **A Clean and Modular PyTorch Training Framework**
 
@@ -302,4 +302,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Happy Training with Trademil! 🏃‍♀️‍➡️** 
+**Happy Training with Trademil! 🚀** 
