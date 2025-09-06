@@ -78,7 +78,21 @@ class TrainingConfig:
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
             
         if isinstance(self.optimizer, dict):
-            self.optimizer = OptimizerConfig(**self.optimizer)
+            # Separate known OptimizerConfig parameters from optimizer-specific ones
+            optimizer_dict = self.optimizer.copy()
+            optimizer_params = {}
+            
+            # Extract parameters that don't belong to OptimizerConfig
+            for key in ['momentum', 'nesterov', 'betas', 'eps', 'amsgrad']:
+                if key in optimizer_dict:
+                    optimizer_params[key] = optimizer_dict.pop(key)
+            
+            # Add any remaining params to the params dict
+            if 'params' in optimizer_dict:
+                optimizer_params.update(optimizer_dict.pop('params'))
+            
+            optimizer_dict['params'] = optimizer_params
+            self.optimizer = OptimizerConfig(**optimizer_dict)
             
         if self.scheduler and isinstance(self.scheduler, dict):
             self.scheduler = SchedulerConfig(**self.scheduler) 

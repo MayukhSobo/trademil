@@ -104,12 +104,24 @@ class Trainer:
         # Add default model checkpointing if configured
         if self.config.save_best_model:
             os.makedirs(self.config.checkpoint_dir, exist_ok=True)
-            checkpoint_path = os.path.join(
-                self.config.checkpoint_dir, 
-                "best_model_epoch_{epoch:03d}_{val_loss:.4f}.pt"
-            )
+            
+            # Choose monitor metric based on whether validation data is available
+            if self.val_dataloader:
+                monitor_metric = "val_loss"
+                checkpoint_path = os.path.join(
+                    self.config.checkpoint_dir, 
+                    "best_model_epoch_{epoch:03d}_{val_loss:.4f}.pt"
+                )
+            else:
+                monitor_metric = "loss"
+                checkpoint_path = os.path.join(
+                    self.config.checkpoint_dir, 
+                    "best_model_epoch_{epoch:03d}_{loss:.4f}.pt"
+                )
+            
             checkpoint = ModelCheckpoint(
                 filepath=checkpoint_path,
+                monitor=monitor_metric,
                 save_best_only=True,
                 verbose=True
             )
@@ -400,7 +412,8 @@ class Trainer:
     
     def load_checkpoint(self, filepath: str, resume_training: bool = True):
         """Load a training checkpoint."""
-        checkpoint = torch.load(filepath, map_location=self.device)
+        # Load with weights_only=False for full checkpoint compatibility
+        checkpoint = torch.load(filepath, map_location=self.device, weights_only=False)
         
         self.model.load_state_dict(checkpoint["model_state_dict"])
         

@@ -61,6 +61,10 @@ class MetricsTracker:
                     if value > self.best_metrics[metric_key]:
                         self.best_metrics[metric_key] = value
         
+        # Clear batch metrics for next epoch
+        for metric_key in self.batch_metrics:
+            self.batch_metrics[metric_key].clear()
+        
         return epoch_summary
     
     def get_current_metrics(self, mode: str = "train") -> Dict[str, float]:
@@ -104,7 +108,11 @@ class StandardMetrics:
     def accuracy(predictions: torch.Tensor, targets: torch.Tensor) -> float:
         """Compute accuracy for classification tasks."""
         if predictions.dim() > 1 and predictions.size(1) > 1:
+            # Multi-class classification
             predictions = torch.argmax(predictions, dim=1)
+        else:
+            # Binary classification - apply threshold
+            predictions = (predictions > 0.5).float()
         correct = (predictions == targets).float()
         return correct.mean().item()
     

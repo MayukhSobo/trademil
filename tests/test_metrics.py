@@ -25,7 +25,9 @@ class TestStandardMetrics:
         targets = torch.tensor([1, 0, 1])
         
         accuracy = StandardMetrics.accuracy(predictions, targets)
-        expected = 2.0 / 3.0  # 2 out of 3 correct
+        # With threshold 0.5: [0.8>0.5, 0.3>0.5, 0.9>0.5] = [1, 0, 1] 
+        # Targets are [1, 0, 1], so all 3 are correct
+        expected = 1.0  # 3 out of 3 correct
         assert abs(accuracy - expected) < 1e-6
     
     def test_top_k_accuracy(self):

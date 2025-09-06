@@ -89,4 +89,5 @@ class TestTrainingConfig:
         
         assert isinstance(config.optimizer, OptimizerConfig)
         assert config.optimizer.optimizer_class == torch.optim.SGD
-        assert config.optimizer.lr == 1e-2 
+        assert config.optimizer.lr == 1e-2
+        assert config.optimizer.params["momentum"] == 0.9 
