@@ -1,7 +1,7 @@
 # 🏃‍♀️‍➡️ Treadmill 🏃‍♀️‍➡️
 
 <div align="center">
-  <img src="treadmill.png" alt="Treadmill Training Framework" width="300"/>
+  <img src="https://raw.githubusercontent.com/MayukhSobo/treadmill/main/treadmill.png" alt="Treadmill Training Framework" width="300"/>
 </div>
 
 **A Clean and Modular PyTorch Training Framework**
