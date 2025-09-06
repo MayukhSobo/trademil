@@ -6,7 +6,7 @@ easy-to-understand training loops with modular components.
 """
 
 __version__ = "0.2.1"
-__author__ = "Treadmill Team"
+__author__ = "Mayukh Sarkar"
 
 from .trainer import Trainer
 from .config import TrainingConfig, OptimizerConfig, SchedulerConfig

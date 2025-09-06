@@ -9,10 +9,10 @@ description = "A Clean and Modular PyTorch Training Framework"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Treadmill Team"}
+    {name = "Mayukh Sarkar", email = "mayukh2012@hotmail.com"}
 ]
 maintainers = [
-    {name = "Treadmill Team"}
+    {name = "Mayukh Sarkar", email = "mayukh2012@hotmail.com"}
 ]
 keywords = ["pytorch", "deep learning", "training", "machine learning", "neural networks"]
 classifiers = [

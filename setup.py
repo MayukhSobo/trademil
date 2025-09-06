@@ -15,8 +15,8 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
 setup(
     name="pytorch-treadmill",
     version="0.2.1",
-    author="Treadmill Team",
-    author_email="",
+    author="Mayukh Sarkar",
+    author_email="mayukh2012@hotmail.com",
     description="A Clean and Modular PyTorch Training Framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
