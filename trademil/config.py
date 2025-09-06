@@ -1,5 +1,5 @@
 """
-Configuration classes for Trademil training framework.
+Configuration classes for Treadmill training framework.
 """
 
 from dataclasses import dataclass, field

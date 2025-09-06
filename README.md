@@ -1,8 +1,8 @@
-# 🏃‍♀️‍➡️ Trademil 🏃‍♀️‍➡️
+# 🏃‍♀️‍➡️ Treadmill 🏃‍♀️‍➡️
 
 **A Clean and Modular PyTorch Training Framework**
 
-Trademil is a lightweight, modular training framework specifically designed for PyTorch. It provides clean, easy-to-understand training loops with beautiful output formatting while maintaining the power and flexibility of vanilla PyTorch.
+Treadmill is a lightweight, modular training framework specifically designed for PyTorch. It provides clean, easy-to-understand training loops with beautiful output formatting while maintaining the power and flexibility of vanilla PyTorch.
 
 ## ✨ Features
 
@@ -21,8 +21,8 @@ Trademil is a lightweight, modular training framework specifically designed for 
 ### From Source
 
 ```bash
-git clone https://github.com/MayukhSobo/trademil.git
-cd trademil
+git clone https://github.com/MayukhSobo/treadmill.git
+cd treadmill
 pip install -e .
 ```
 
@@ -47,8 +47,8 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader
 
-from trademil import Trainer, TrainingConfig, OptimizerConfig
-from trademil.metrics import StandardMetrics
+from treadmill import Trainer, TrainingConfig, OptimizerConfig
+from treadmill.metrics import StandardMetrics
 
 # Define your model
 class SimpleNet(nn.Module):
@@ -130,7 +130,7 @@ config = TrainingConfig(
 Extend functionality with callbacks:
 
 ```python
-from trademil.callbacks import EarlyStopping, ModelCheckpoint, LearningRateLogger
+from treadmill.callbacks import EarlyStopping, ModelCheckpoint, LearningRateLogger
 
 callbacks = [
     EarlyStopping(monitor="val_loss", patience=10, verbose=True),
@@ -151,7 +151,7 @@ trainer = Trainer(..., callbacks=callbacks)
 Define your own metrics or use built-in ones:
 
 ```python
-from trademil.metrics import StandardMetrics
+from treadmill.metrics import StandardMetrics
 
 # Built-in metrics
 metric_fns = {
@@ -240,11 +240,11 @@ checkpoint = new_trainer.load_checkpoint("my_checkpoint.pt", resume_training=Fal
 
 ## 📊 Output Examples
 
-Trademil provides beautiful, informative output during training:
+Treadmill provides beautiful, informative output during training:
 
 ```
 ============================================================
-🚀 Starting Training with Trademil
+🚀 Starting Training with Treadmill
 ============================================================
 
 ┌─────────────────────────────────────────────────────────┐
@@ -302,4 +302,4 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Happy Training with Trademil! 🚀** 
+**Happy Training with Treadmill! 🚀** 

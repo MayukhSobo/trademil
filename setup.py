@@ -1,5 +1,5 @@
 """
-Setup script for Trademil framework.
+Setup script for Treadmill framework.
 """
 
 from setuptools import setup, find_packages
@@ -13,14 +13,14 @@ with open("requirements.txt", "r", encoding="utf-8") as fh:
     requirements = [line.strip() for line in fh if line.strip() and not line.startswith("#")]
 
 setup(
-    name="trademil",
+    name="treadmill",
     version="0.1.0",
-    author="Trademil Team",
+    author="Treadmill Team",
     author_email="",
     description="A Clean and Modular PyTorch Training Framework",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/trademil",
+    url="https://github.com/yourusername/treadmill",
     packages=find_packages(),
     classifiers=[
         "Development Status :: 3 - Alpha",
@@ -66,8 +66,8 @@ setup(
     },
     keywords="pytorch, deep learning, training, machine learning, neural networks",
     project_urls={
-        "Bug Reports": "https://github.com/yourusername/trademil/issues",
-        "Source": "https://github.com/yourusername/trademil",
-        "Documentation": "https://trademil.readthedocs.io/",
+        "Bug Reports": "https://github.com/yourusername/treadmill/issues",
+        "Source": "https://github.com/yourusername/treadmill",
+        "Documentation": "https://treadmill.readthedocs.io/",
     },
 ) 

@@ -1,5 +1,5 @@
 """
-Callback system for Trademil training framework.
+Callback system for Treadmill training framework.
 """
 
 import os

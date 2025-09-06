@@ -5,7 +5,7 @@ Unit tests for metrics module.
 import pytest
 import torch
 import numpy as np
-from trademil.metrics import MetricsTracker, StandardMetrics, compute_metrics
+from treadmill.metrics import MetricsTracker, StandardMetrics, compute_metrics
 
 
 class TestStandardMetrics:

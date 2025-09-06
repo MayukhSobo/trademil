@@ -4,7 +4,7 @@ include MANIFEST.in
 include requirements.txt
 include pyproject.toml
 
-recursive-include trademil *.py
+recursive-include treadmill *.py
 recursive-include examples *.py
 recursive-include tests *.py
 

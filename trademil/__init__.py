@@ -1,12 +1,12 @@
 """
-Trademil - A Clean and Modular PyTorch Training Framework
+Treadmill - A Clean and Modular PyTorch Training Framework
 
 A training framework designed specifically for PyTorch that provides clean,
 easy-to-understand training loops with modular components.
 """
 
 __version__ = "0.1.0"
-__author__ = "Trademil Team"
+__author__ = "Treadmill Team"
 
 from .trainer import Trainer
 from .config import TrainingConfig, OptimizerConfig, SchedulerConfig

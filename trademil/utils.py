@@ -1,5 +1,5 @@
 """
-Utility functions for Trademil framework.
+Utility functions for Treadmill framework.
 """
 
 import time
@@ -124,7 +124,7 @@ class ProgressTracker:
         # Print training header
         header_line = "_"*60
         console.print(f"\n{header_line}", justify="center")
-        console.print(f"[bold {COLORS['header']}]🚀 Starting Training with Trademil[/bold {COLORS['header']}]", justify="center")
+        console.print(f"[bold {COLORS['header']}]🚀 Starting Training with Treadmill[/bold {COLORS['header']}]", justify="center")
         console.print(header_line, justify="center")
         
     def start_epoch(self, epoch: int):

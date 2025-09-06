@@ -4,7 +4,7 @@ Unit tests for configuration module.
 
 import pytest
 import torch
-from trademil.config import TrainingConfig, OptimizerConfig, SchedulerConfig
+from treadmill.config import TrainingConfig, OptimizerConfig, SchedulerConfig
 
 
 class TestOptimizerConfig:

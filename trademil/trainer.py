@@ -1,5 +1,5 @@
 """
-Main Trainer class for Trademil framework.
+Main Trainer class for Treadmill framework.
 """
 
 import time
@@ -193,7 +193,7 @@ class Trainer:
                 
         except KeyboardInterrupt:
             from rich.text import Text
-            from trademil.utils import COLORS, console
+            from treadmill.utils import COLORS, console
             interrupt_text = Text("Training interrupted by user", style=f"bold {COLORS['warning']}")
             console.print(f"\n{interrupt_text}")
             

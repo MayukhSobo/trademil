@@ -1,5 +1,5 @@
 """
-Metrics tracking system for Trademil.
+Metrics tracking system for Treadmill.
 """
 
 from typing import Dict, List, Optional, Any, Callable

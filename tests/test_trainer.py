@@ -7,8 +7,8 @@ import torch
 import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
-from trademil import Trainer, TrainingConfig, OptimizerConfig
-from trademil.metrics import StandardMetrics
+from treadmill import Trainer, TrainingConfig, OptimizerConfig
+from treadmill.metrics import StandardMetrics
 
 
 class SimpleModel(nn.Module):

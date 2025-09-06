@@ -1,5 +1,5 @@
 """
-Advanced training example using Trademil framework.
+Advanced training example using Treadmill framework.
 
 This example demonstrates more advanced features including:
 - Custom forward and backward functions
@@ -14,12 +14,12 @@ import torch.nn.functional as F
 from torch.utils.data import DataLoader, Dataset
 import numpy as np
 
-# Import Trademil components
-from trademil import (
+# Import Treadmill components
+from treadmill import (
     Trainer, TrainingConfig, OptimizerConfig, SchedulerConfig,
     Callback, ModelCheckpoint
 )
-from trademil.metrics import StandardMetrics
+from treadmill.metrics import StandardMetrics
 
 
 class Encoder(nn.Module):

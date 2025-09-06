@@ -1,19 +1,19 @@
 """
-Basic training example using Trademil framework.
+Basic training example using Treadmill framework.
 
-This example shows how to train a simple CNN on CIFAR-10 using the Trademil framework.
+This example shows how to train a simple CNN on CIFAR-10 using the Treadmill framework.
 """
 import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-# Import Trademil components
-from trademil import (
+# Import Treadmill components
+from treadmill import (
     Trainer, TrainingConfig, OptimizerConfig, SchedulerConfig,
     EarlyStopping, ModelCheckpoint
 )
-from trademil.metrics import StandardMetrics
+from treadmill.metrics import StandardMetrics
 
 
 class SimpleCNN(nn.Module):

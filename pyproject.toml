@@ -3,16 +3,16 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "trademil"
+name = "treadmill"
 version = "0.1.0"
 description = "A Clean and Modular PyTorch Training Framework"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "Trademil Team"}
+    {name = "Treadmill Team"}
 ]
 maintainers = [
-    {name = "Trademil Team"}
+    {name = "Treadmill Team"}
 ]
 keywords = ["pytorch", "deep learning", "training", "machine learning", "neural networks"]
 classifiers = [
@@ -66,10 +66,10 @@ full = [
 ]
 
 [project.urls]
-homepage = "https://github.com/yourusername/trademil"
-documentation = "https://trademil.readthedocs.io/"
-repository = "https://github.com/yourusername/trademil"
-changelog = "https://github.com/yourusername/trademil/blob/main/CHANGELOG.md"
+homepage = "https://github.com/yourusername/treadmill"
+documentation = "https://treadmill.readthedocs.io/"
+repository = "https://github.com/yourusername/treadmill"
+changelog = "https://github.com/yourusername/treadmill/blob/main/CHANGELOG.md"
 
 [tool.black]
 line-length = 88
@@ -101,7 +101,7 @@ python_files = ["test_*.py"]
 addopts = [
     "--strict-markers",
     "--strict-config",
-    "--cov=trademil",
+    "--cov=treadmill",
     "--cov-report=html",
     "--cov-report=term-missing",
 ]
@@ -110,7 +110,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["trademil"]
+source = ["treadmill"]
 omit = ["tests/*", "examples/*"]
 
 [tool.coverage.report]
