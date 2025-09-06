@@ -5,7 +5,7 @@ A training framework designed specifically for PyTorch that provides clean,
 easy-to-understand training loops with modular components.
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __author__ = "Mayukh Sarkar"
 
 from .trainer import Trainer
