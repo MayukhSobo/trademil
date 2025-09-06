@@ -67,7 +67,7 @@ Here's a complete example that trains a simple neural network:
     )
 
     # Step 5: Train your model!
-    trainer.fit()
+    trainer.train()
 
 **That's it!** 🎉 Your model is now training with:
 - Automatic device detection (GPU/CPU)
@@ -174,7 +174,7 @@ Image Classification
 
     config = TrainingConfig(epochs=20, mixed_precision=True)
     trainer = Trainer(model, config, train_loader)
-    trainer.fit()
+    trainer.train()
 
 Text Classification
 ^^^^^^^^^^^^^^^^^^^
@@ -203,7 +203,7 @@ Text Classification
     
     config = TrainingConfig(epochs=15, device="auto")
     trainer = Trainer(model, config, train_loader)
-    trainer.fit()
+    trainer.train()
 
 Customizing Your Training
 -------------------------

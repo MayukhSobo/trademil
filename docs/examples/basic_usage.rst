@@ -117,7 +117,7 @@ Step 4: Train with Minimal Setup
     
     # Train the model
     print("🚀 Starting training...")
-    history = trainer.fit()
+    history = trainer.train()
     print("✅ Training completed!")
 
 Step 5: Evaluate Results
@@ -303,7 +303,7 @@ Step 4: Train Classification Model
     
     # Train
     print("🚀 Starting classification training...")
-    history = trainer.fit()
+    history = trainer.train()
     
     # Evaluate
     test_results = trainer.evaluate(test_loader)
@@ -328,7 +328,7 @@ Key Takeaways - Basic Usage
         loss_fn=loss_function
     )
     
-    history = trainer.fit()
+    history = trainer.train()
 
 **🚀 What Treadmill Handles Automatically:**
 
@@ -367,7 +367,7 @@ Key Takeaways - Basic Usage
 2. **Define model** → Standard PyTorch nn.Module
 3. **Configure training** → TrainingConfig
 4. **Create trainer** → Trainer class
-5. **Train model** → trainer.fit()
+5. **Train model** → trainer.train()
 6. **Evaluate** → trainer.evaluate()
 
 That's it! Treadmill makes PyTorch training as simple as possible while giving you all the power you need. 🏃‍♀️‍➡️

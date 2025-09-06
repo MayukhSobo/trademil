@@ -178,7 +178,7 @@ Step 5: Train the CNN
 
     # Train the model
     print("🚀 Training CNN on MNIST...")
-    history = trainer.fit()
+    history = trainer.train()
 
     # Evaluate on test set
     test_results = trainer.evaluate(test_loader)

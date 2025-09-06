@@ -663,7 +663,7 @@ Step 8: Custom Trainer for Seq2Seq
     
     # Train the model
     print("🚀 Starting Seq2Seq Training...")
-    history = trainer.fit()
+    history = trainer.train()
     
     # Evaluate
     test_results = trainer.evaluate(val_loader)

@@ -534,7 +534,7 @@ Step 8: Training with All Advanced Features
     print("-" * 80)
     
     # Start advanced training
-    history = trainer.fit()
+    history = trainer.train()
     print("✅ Advanced training completed!")
 
 Step 9: Advanced Evaluation and Analysis

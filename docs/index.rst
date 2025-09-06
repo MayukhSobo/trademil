@@ -72,7 +72,7 @@ Get started with Treadmill in just a few lines of code:
     )
     
     # Train your model
-    trainer.fit()
+    trainer.train()
 
 Installation
 ------------

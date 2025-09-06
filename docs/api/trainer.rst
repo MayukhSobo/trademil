@@ -92,7 +92,7 @@ The primary method for training your model. Executes the complete training loop 
 .. code-block:: python
 
     # Basic training
-    history = trainer.fit()
+    history = trainer.train()
     
     # Access training history
     print(f"Final training loss: {history['train_loss'][-1]}")
@@ -195,7 +195,7 @@ Loads a previously saved checkpoint, restoring model weights, optimizer state, a
     print(f"Resuming from epoch {checkpoint_data.get('epoch', 0)}")
     
     # Continue training
-    trainer.fit()
+    trainer.train()
 
 get_history()
 ^^^^^^^^^^^^^
@@ -409,7 +409,7 @@ Integration with Callbacks
     )
     
     # Callbacks are automatically called during training
-    history = trainer.fit()
+    history = trainer.train()
 
 Multi-GPU Training
 ^^^^^^^^^^^^^^^^^^
@@ -427,7 +427,7 @@ Multi-GPU Training
     )
     
     trainer = Trainer(model, config, train_loader, val_loader)
-    trainer.fit()
+    trainer.train()
 
 See Also
 --------

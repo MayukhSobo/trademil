@@ -176,7 +176,7 @@ Step 3: Create and Train DNN
     
     # Train the model
     print("🚀 Training Binary Classification DNN...")
-    history = trainer.fit()
+    history = trainer.train()
     
     # Evaluate
     results = trainer.evaluate(test_loader)
@@ -258,7 +258,7 @@ Step 5: Deeper Network for Multi-Class
     
     # Train deeper model
     print("🚀 Training Multi-Class DNN...")
-    deeper_history = deeper_trainer.fit()
+    deeper_history = deeper_trainer.train()
     
     # Evaluate deeper model
     deeper_results = deeper_trainer.evaluate(test_multi_loader)
@@ -382,7 +382,7 @@ Step 7: Train Regression DNN
     
     # Train regression model
     print("🚀 Training Regression DNN...")
-    reg_history = reg_trainer.fit()
+    reg_history = reg_trainer.train()
     
     # Evaluate regression model
     reg_results = reg_trainer.evaluate(test_reg_loader)

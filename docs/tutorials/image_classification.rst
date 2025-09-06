@@ -505,7 +505,7 @@ Initialize and Train
     print("-" * 80)
     
     # Train the model
-    history = trainer.fit()
+    history = trainer.train()
     
     print("🎉 Training completed!")
 
