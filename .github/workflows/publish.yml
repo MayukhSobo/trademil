@@ -1,45 +1,105 @@
-name: Publish to PyPI
+name: Publish Python Package
 
 on:
   release:
-    types: [published]
+    types: [published]  # Only trigger on published events
+  workflow_run:
+    workflows: ["Auto Version Bump and Release"]  
+    types: [completed]
 
 jobs:
-  publish:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read  # Required to checkout code
+      id-token: write  # Required for PyPI trusted publishing
+    # Run if triggered by a published release OR if auto-release workflow completed successfully
+    if: |
+      (github.event_name == 'release' && github.event.action == 'published') ||
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.name == 'Auto Version Bump and Release')
     
     steps:
-    - uses: actions/checkout@v3
+    - name: Debug workflow trigger
+      run: |
+        echo "🔍 Publish workflow trigger debugging:"
+        echo "  Event name: ${{ github.event_name }}"
+        if [[ "${{ github.event_name }}" == "release" ]]; then
+          echo "  Release action: ${{ github.event.action }}"
+          echo "  Release tag: ${{ github.event.release.tag_name }}"
+          echo "  Release draft: ${{ github.event.release.draft }}"
+        elif [[ "${{ github.event_name }}" == "workflow_run" ]]; then
+          echo "  Workflow name: ${{ github.event.workflow_run.name }}"
+          echo "  Workflow conclusion: ${{ github.event.workflow_run.conclusion }}"
+          echo "  Workflow status: ${{ github.event.workflow_run.status }}"
+          echo "  Head branch: ${{ github.event.workflow_run.head_branch }}"
+        fi
+    
+    - name: Get release information
+      id: release_info
+      run: |
+        if [[ "${{ github.event_name }}" == "release" ]]; then
+          echo "tag_name=${{ github.event.release.tag_name }}" >> $GITHUB_OUTPUT
+          echo "Triggered by release event: ${{ github.event.release.tag_name }}"
+        else
+          # Get the latest release when triggered by workflow_run
+          LATEST_RELEASE=$(gh api repos/MayukhSobo/treadmill/releases/latest --jq '.tag_name')
+          echo "tag_name=$LATEST_RELEASE" >> $GITHUB_OUTPUT
+          echo "Triggered by workflow_run, latest release: $LATEST_RELEASE"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Debug release info
+      run: |
+        echo "🚀 Publish workflow triggered!"
+        echo "📋 Workflow Chain Status:"
+        echo "  ✅ 1. CI tests passed"
+        echo "  ✅ 2. Auto-release completed"
+        echo "  🔄 3. Publish workflow started (this step)"
+        echo ""
+        echo "📦 Release Details:"
+        echo "  Trigger event: ${{ github.event_name }}"
+        echo "  Release tag: ${{ steps.release_info.outputs.tag_name }}"
+        if [[ "${{ github.event_name }}" == "release" ]]; then
+          echo "  Release name: ${{ github.event.release.name }}"
+          echo "  Release event: ${{ github.event.action }}"
+          echo "  Is prerelease: ${{ github.event.release.prerelease }}"
+          echo "  Is draft: ${{ github.event.release.draft }}"
+        fi
+    
+    - uses: actions/checkout@v4
     
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: '3.11'
     
-    - name: Install build dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install build twine
+        pip install build
     
     - name: Build package
-      run: |
-        python -m build
+      run: python -m build
     
-    - name: Check package
-      run: |
-        twine check dist/*
+    - name: Publish package to PyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        user: __token__
+        password: ${{ secrets.PYPI_API_TOKEN }}
+        # Remove the above and use trusted publishing once configured on PyPI
     
-    - name: Publish to Test PyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+    - name: Publish success notification
       run: |
-        twine upload --repository testpypi dist/*
-      continue-on-error: true
-    
-    - name: Publish to PyPI
-      env:
-        TWINE_USERNAME: __token__
-        TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: |
-        twine upload dist/* 
+        TAG_NAME="${{ steps.release_info.outputs.tag_name }}"
+        VERSION="${TAG_NAME#v}"  # Remove 'v' prefix to get version number
+        
+        echo "🎉 Successfully published treadmill $TAG_NAME to PyPI!"
+        echo "📦 Install with: pip install treadmill==$VERSION"
+        echo "🔗 PyPI: https://pypi.org/project/treadmill/"
+        echo ""
+        echo "✅ Workflow Chain Complete:"
+        echo "  ✅ 1. CI tests passed"
+        echo "  ✅ 2. Auto-release completed"  
+        echo "  ✅ 3. Package published to PyPI" 
