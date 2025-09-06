@@ -1,0 +1,32 @@
+API Reference
+=============
+
+.. automodule:: treadmill
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: treadmill.trainer
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: treadmill.config
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: treadmill.metrics
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: treadmill.callbacks
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+.. automodule:: treadmill.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:

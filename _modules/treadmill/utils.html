@@ -1,0 +1,425 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>treadmill.utils &mdash; Treadmill  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Treadmill
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Treadmill</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">treadmill.utils</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for treadmill.utils</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Utility functions for Treadmill framework.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.console</span><span class="w"> </span><span class="kn">import</span> <span class="n">Console</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.table</span><span class="w"> </span><span class="kn">import</span> <span class="n">Table</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.progress</span><span class="w"> </span><span class="kn">import</span> <span class="n">Progress</span><span class="p">,</span> <span class="n">BarColumn</span><span class="p">,</span> <span class="n">TextColumn</span><span class="p">,</span> <span class="n">TimeRemainingColumn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich.panel</span><span class="w"> </span><span class="kn">import</span> <span class="n">Panel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">rich</span><span class="w"> </span><span class="kn">import</span> <span class="n">box</span>
+
+
+<span class="n">console</span> <span class="o">=</span> <span class="n">Console</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="detect_terminal_theme">
+<a class="viewcode-back" href="../../api.html#treadmill.detect_terminal_theme">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">detect_terminal_theme</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Detect if terminal has dark or light theme.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Try to detect terminal background</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+        
+        <span class="c1"># Check common environment variables</span>
+        <span class="n">term_program</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;TERM_PROGRAM&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">colorterm</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;COLORTERM&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">term</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;TERM&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        
+        <span class="c1"># Some heuristics for light themes</span>
+        <span class="n">light_indicators</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">&#39;light&#39;</span> <span class="ow">in</span> <span class="n">term</span><span class="p">,</span>
+            <span class="s1">&#39;bright&#39;</span> <span class="ow">in</span> <span class="n">term</span><span class="p">,</span>
+            <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;TERMINAL_THEME&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span> <span class="o">==</span> <span class="s1">&#39;light&#39;</span>
+        <span class="p">]</span>
+        
+        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">light_indicators</span><span class="p">):</span>
+            <span class="k">return</span> <span class="s1">&#39;light&#39;</span>
+        
+        <span class="c1"># Default to dark theme (most common for developers)</span>
+        <span class="k">return</span> <span class="s1">&#39;dark&#39;</span>
+        
+    <span class="k">except</span><span class="p">:</span>
+        <span class="k">return</span> <span class="s1">&#39;dark&#39;</span>  <span class="c1"># Safe fallback</span></div>
+
+
+
+<div class="viewcode-block" id="get_theme_colors">
+<a class="viewcode-back" href="../../api.html#treadmill.get_theme_colors">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">get_theme_colors</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get colors based on terminal theme.&quot;&quot;&quot;</span>
+    <span class="n">theme</span> <span class="o">=</span> <span class="n">detect_terminal_theme</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">theme</span> <span class="o">==</span> <span class="s1">&#39;light&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;epoch&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;train&#39;</span><span class="p">:</span> <span class="s1">&#39;dark_green&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;val&#39;</span><span class="p">:</span> <span class="s1">&#39;dark_orange3&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="s1">&#39;black&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;improvement&#39;</span><span class="p">:</span> <span class="s1">&#39;dark_green&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;regression&#39;</span><span class="p">:</span> <span class="s1">&#39;red3&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;warning&#39;</span><span class="p">:</span> <span class="s1">&#39;red3&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="s1">&#39;dark_green&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="s1">&#39;blue&#39;</span>
+        <span class="p">}</span>
+    <span class="k">else</span><span class="p">:</span>  <span class="c1"># dark theme</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="s1">&#39;header&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_blue&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;epoch&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_cyan&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;train&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_green&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;val&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_yellow&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;metric&#39;</span><span class="p">:</span> <span class="s1">&#39;cyan&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;improvement&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_green&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;regression&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_red&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;warning&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_red&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;success&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_green&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;info&#39;</span><span class="p">:</span> <span class="s1">&#39;bright_blue&#39;</span>
+        <span class="p">}</span></div>
+
+
+
+<span class="c1"># Get theme colors</span>
+<span class="n">COLORS</span> <span class="o">=</span> <span class="n">get_theme_colors</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="format_time">
+<a class="viewcode-back" href="../../api.html#treadmill.format_time">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_time</span><span class="p">(</span><span class="n">seconds</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format time in seconds to human-readable format.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">seconds</span> <span class="o">&lt;</span> <span class="mi">60</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="nb">round</span><span class="p">(</span><span class="n">seconds</span><span class="p">)</span><span class="si">}</span><span class="s2">s&quot;</span>
+    <span class="k">elif</span> <span class="n">seconds</span> <span class="o">&lt;</span> <span class="mi">3600</span><span class="p">:</span>
+        <span class="n">minutes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="n">secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">seconds</span> <span class="o">%</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">minutes</span><span class="si">}</span><span class="s2">m </span><span class="si">{</span><span class="n">secs</span><span class="si">}</span><span class="s2">s&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">hours</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">seconds</span> <span class="o">//</span> <span class="mi">3600</span><span class="p">)</span>
+        <span class="n">minutes</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">seconds</span> <span class="o">%</span> <span class="mi">3600</span><span class="p">)</span> <span class="o">//</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="n">secs</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">seconds</span> <span class="o">%</span> <span class="mi">60</span><span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">hours</span><span class="si">}</span><span class="s2">h </span><span class="si">{</span><span class="n">minutes</span><span class="si">}</span><span class="s2">m </span><span class="si">{</span><span class="n">secs</span><span class="si">}</span><span class="s2">s&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="format_metrics">
+<a class="viewcode-back" href="../../api.html#treadmill.format_metrics">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_metrics</span><span class="p">(</span><span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format metrics dictionary for display.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">precision</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span></div>
+
+
+
+<div class="viewcode-block" id="format_number">
+<a class="viewcode-back" href="../../api.html#treadmill.format_number">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">format_number</span><span class="p">(</span><span class="n">num</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">precision</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Format a number for display.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">1e6</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="o">/</span><span class="mf">1e6</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">M&quot;</span>
+    <span class="k">elif</span> <span class="nb">abs</span><span class="p">(</span><span class="n">num</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mf">1e3</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="o">/</span><span class="mf">1e3</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">K&quot;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">num</span><span class="si">:</span><span class="s2">.</span><span class="si">{</span><span class="n">precision</span><span class="si">}</span><span class="s2">f</span><span class="si">}</span><span class="s2">&quot;</span></div>
+
+
+
+<div class="viewcode-block" id="ProgressTracker">
+<a class="viewcode-back" href="../../api.html#treadmill.ProgressTracker">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ProgressTracker</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Enhanced progress tracking with rich formatting.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch_start_time</span> <span class="o">=</span> <span class="kc">None</span>
+        
+<div class="viewcode-block" id="ProgressTracker.start_training">
+<a class="viewcode-back" href="../../api.html#treadmill.ProgressTracker.start_training">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_training</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">total_epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total_batches_per_epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initialize training progress tracking.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_epochs</span> <span class="o">=</span> <span class="n">total_epochs</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">total_batches_per_epoch</span> <span class="o">=</span> <span class="n">total_batches_per_epoch</span>
+        
+        <span class="c1"># Print training header</span>
+        <span class="n">header_line</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span><span class="o">*</span><span class="mi">60</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="si">{</span><span class="n">header_line</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]🚀 Starting Training with Treadmill[/bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;header&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">header_line</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="ProgressTracker.start_epoch">
+<a class="viewcode-back" href="../../api.html#treadmill.ProgressTracker.start_epoch">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">start_epoch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Start epoch tracking.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epoch_start_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_epoch</span> <span class="o">=</span> <span class="n">epoch</span></div>
+
+        
+<div class="viewcode-block" id="ProgressTracker.print_epoch_header">
+<a class="viewcode-back" href="../../api.html#treadmill.ProgressTracker.print_epoch_header">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_epoch_header</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total_epochs</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print nice epoch header.&quot;&quot;&quot;</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total_epochs</span><span class="si">}</span><span class="s2">[/bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;-&quot;</span> <span class="o">*</span> <span class="mi">40</span><span class="p">)</span></div>
+
+        
+<div class="viewcode-block" id="ProgressTracker.print_batch_progress">
+<a class="viewcode-back" href="../../api.html#treadmill.ProgressTracker.print_batch_progress">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_batch_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">total_batches</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> 
+                           <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="n">print_every</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print batch progress.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">%</span> <span class="n">print_every</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">batch_idx</span> <span class="o">==</span> <span class="n">total_batches</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">progress</span> <span class="o">=</span> <span class="p">(</span><span class="n">batch_idx</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_batches</span> <span class="o">*</span> <span class="mi">100</span>
+            <span class="n">metrics_str</span> <span class="o">=</span> <span class="s2">&quot; | &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">v</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">metrics</span><span class="o">.</span><span class="n">items</span><span class="p">()])</span>
+            
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]Batch </span><span class="si">{</span><span class="n">batch_idx</span><span class="o">+</span><span class="mi">1</span><span class="si">:</span><span class="s2">4d</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total_batches</span><span class="si">}</span><span class="s2"> &quot;</span>
+                         <span class="sa">f</span><span class="s2">&quot;(</span><span class="si">{</span><span class="n">progress</span><span class="si">:</span><span class="s2">5.1f</span><span class="si">}</span><span class="s2">%)[/</span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">] | </span><span class="si">{</span><span class="n">metrics_str</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="ProgressTracker.print_epoch_summary">
+<a class="viewcode-back" href="../../api.html#treadmill.ProgressTracker.print_epoch_summary">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">print_epoch_summary</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">train_metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> 
+                          <span class="n">val_metrics</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                          <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">has_early_stopping</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print epoch summary in a nice table format.&quot;&quot;&quot;</span>
+        
+        <span class="c1"># Calculate epoch time</span>
+        <span class="n">epoch_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">epoch_start_time</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">epoch_start_time</span> <span class="k">else</span> <span class="mi">0</span>
+        <span class="n">total_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span> <span class="k">else</span> <span class="mi">0</span>
+        
+        <span class="c1"># Create summary table with enhanced styling</span>
+        <span class="n">table</span> <span class="o">=</span> <span class="n">Table</span><span class="p">(</span>
+            <span class="n">show_header</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+            <span class="n">header_style</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;metric&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> 
+            <span class="n">box</span><span class="o">=</span><span class="n">box</span><span class="o">.</span><span class="n">ROUNDED</span><span class="p">,</span>
+            <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;[bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]Epoch </span><span class="si">{</span><span class="n">epoch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> Summary[/bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span>
+            <span class="n">title_style</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;epoch&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Metric&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;metric&#39;</span><span class="p">],</span> <span class="n">no_wrap</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Train&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;train&#39;</span><span class="p">],</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">val_metrics</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Validation&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;val&#39;</span><span class="p">],</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_column</span><span class="p">(</span><span class="s2">&quot;Change&quot;</span><span class="p">,</span> <span class="n">style</span><span class="o">=</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;improvement&#39;</span><span class="p">],</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Add metrics to table</span>
+        <span class="n">all_metrics</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">train_metrics</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">val_metrics</span><span class="p">:</span>
+            <span class="n">all_metrics</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">val_metrics</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+            
+        <span class="k">for</span> <span class="n">metric</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">all_metrics</span><span class="p">):</span>
+            <span class="n">train_val</span> <span class="o">=</span> <span class="n">format_number</span><span class="p">(</span><span class="n">train_metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+            <span class="k">if</span> <span class="n">val_metrics</span><span class="p">:</span>
+                <span class="n">val_val</span> <span class="o">=</span> <span class="n">format_number</span><span class="p">(</span><span class="n">val_metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">))</span>
+                
+                <span class="c1"># Calculate change (improvement indicator with percentage)</span>
+                <span class="n">train_num</span> <span class="o">=</span> <span class="n">train_metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+                <span class="n">val_num</span> <span class="o">=</span> <span class="n">val_metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">metric</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+                
+                <span class="c1"># Calculate percentage change</span>
+                <span class="k">if</span> <span class="n">train_num</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">pct_change</span> <span class="o">=</span> <span class="p">((</span><span class="n">val_num</span> <span class="o">-</span> <span class="n">train_num</span><span class="p">)</span> <span class="o">/</span> <span class="nb">abs</span><span class="p">(</span><span class="n">train_num</span><span class="p">))</span> <span class="o">*</span> <span class="mi">100</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">pct_change</span> <span class="o">=</span> <span class="mi">0</span>
+                
+                <span class="k">if</span> <span class="s2">&quot;loss&quot;</span> <span class="ow">in</span> <span class="n">metric</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+                    <span class="c1"># For loss, lower is better</span>
+                    <span class="n">is_improvement</span> <span class="o">=</span> <span class="n">val_num</span> <span class="o">&lt;</span> <span class="n">train_num</span>
+                    <span class="n">arrow</span> <span class="o">=</span> <span class="s2">&quot;↓&quot;</span> <span class="k">if</span> <span class="n">is_improvement</span> <span class="k">else</span> <span class="s2">&quot;↑&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="c1"># For other metrics, higher is usually better</span>
+                    <span class="n">is_improvement</span> <span class="o">=</span> <span class="n">val_num</span> <span class="o">&gt;</span> <span class="n">train_num</span>
+                    <span class="n">arrow</span> <span class="o">=</span> <span class="s2">&quot;↑&quot;</span> <span class="k">if</span> <span class="n">is_improvement</span> <span class="k">else</span> <span class="s2">&quot;↓&quot;</span>
+                
+                <span class="n">change_color</span> <span class="o">=</span> <span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;improvement&#39;</span><span class="p">]</span> <span class="k">if</span> <span class="n">is_improvement</span> <span class="k">else</span> <span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;regression&#39;</span><span class="p">]</span>
+                <span class="n">change_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">change_color</span><span class="si">}</span><span class="s2">]</span><span class="si">{</span><span class="n">arrow</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="nb">abs</span><span class="p">(</span><span class="n">pct_change</span><span class="p">)</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%[/</span><span class="si">{</span><span class="n">change_color</span><span class="si">}</span><span class="s2">]&quot;</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span> <span class="n">train_val</span><span class="p">,</span> <span class="n">val_val</span><span class="p">,</span> <span class="n">change_text</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="n">metric</span><span class="o">.</span><span class="n">capitalize</span><span class="p">(),</span> <span class="n">train_val</span><span class="p">)</span>
+        
+        <span class="c1"># Add separator</span>
+        <span class="k">if</span> <span class="n">val_metrics</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        
+        <span class="c1"># Add timing information</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">&quot;[bold]Epoch Time[/bold]&quot;</span><span class="p">,</span> 
+                     <span class="sa">f</span><span class="s2">&quot;[dim]</span><span class="si">{</span><span class="n">format_time</span><span class="p">(</span><span class="n">epoch_time</span><span class="p">)</span><span class="si">}</span><span class="s2">[/dim]&quot;</span><span class="p">,</span> 
+                     <span class="sa">f</span><span class="s2">&quot;[dim]</span><span class="si">{</span><span class="n">format_time</span><span class="p">(</span><span class="n">epoch_time</span><span class="p">)</span><span class="si">}</span><span class="s2">[/dim]&quot;</span> <span class="k">if</span> <span class="n">val_metrics</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">val_metrics</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">table</span><span class="o">.</span><span class="n">add_row</span><span class="p">(</span><span class="s2">&quot;[bold]Total Time[/bold]&quot;</span><span class="p">,</span> 
+                     <span class="sa">f</span><span class="s2">&quot;[dim]</span><span class="si">{</span><span class="n">format_time</span><span class="p">(</span><span class="n">total_time</span><span class="p">)</span><span class="si">}</span><span class="s2">[/dim]&quot;</span><span class="p">,</span>
+                     <span class="sa">f</span><span class="s2">&quot;[dim]</span><span class="si">{</span><span class="n">format_time</span><span class="p">(</span><span class="n">total_time</span><span class="p">)</span><span class="si">}</span><span class="s2">[/dim]&quot;</span> <span class="k">if</span> <span class="n">val_metrics</span> <span class="k">else</span> <span class="kc">None</span><span class="p">,</span>
+                     <span class="s2">&quot;&quot;</span> <span class="k">if</span> <span class="n">val_metrics</span> <span class="k">else</span> <span class="kc">None</span><span class="p">)</span>
+        
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">table</span><span class="p">)</span>
+        
+        <span class="c1"># Check for overfitting if early stopping is not active</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">config</span> <span class="ow">and</span> <span class="n">val_metrics</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">has_early_stopping</span> <span class="ow">and</span> 
+            <span class="s2">&quot;loss&quot;</span> <span class="ow">in</span> <span class="n">train_metrics</span> <span class="ow">and</span> <span class="s2">&quot;loss&quot;</span> <span class="ow">in</span> <span class="n">val_metrics</span><span class="p">):</span>
+            
+            <span class="n">train_loss</span> <span class="o">=</span> <span class="n">train_metrics</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span>
+            <span class="n">val_loss</span> <span class="o">=</span> <span class="n">val_metrics</span><span class="p">[</span><span class="s2">&quot;loss&quot;</span><span class="p">]</span>
+            
+            <span class="k">if</span> <span class="n">train_loss</span> <span class="o">+</span> <span class="n">config</span><span class="o">.</span><span class="n">overfit_threshold</span> <span class="o">&lt;</span> <span class="n">val_loss</span><span class="p">:</span>
+                <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[</span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;warning&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]⚠️  Model is potentially overfitting &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;(val_loss: </span><span class="si">{</span><span class="n">val_loss</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> &gt; train_loss + threshold: &quot;</span>
+                             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">train_loss</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">config</span><span class="o">.</span><span class="n">overfit_threshold</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)[/</span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;warning&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+        
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">()</span></div>
+
+        
+<div class="viewcode-block" id="ProgressTracker.finish_training">
+<a class="viewcode-back" href="../../api.html#treadmill.ProgressTracker.finish_training">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">finish_training</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print training completion message.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span><span class="p">:</span>
+            <span class="n">total_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">start_time</span>
+            
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="s2">&quot;_&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]✅ Training Complete![/bold </span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]Total training time: </span><span class="si">{</span><span class="n">format_time</span><span class="p">(</span><span class="n">total_time</span><span class="p">)</span><span class="si">}</span><span class="s2">[/</span><span class="si">{</span><span class="n">COLORS</span><span class="p">[</span><span class="s1">&#39;success&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="o">*</span><span class="mi">60</span><span class="p">,</span> <span class="n">justify</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="print_model_summary">
+<a class="viewcode-back" href="../../api.html#treadmill.print_model_summary">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">print_model_summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">sample_input_shape</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">tuple</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Print a summary of the model.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">torchinfo</span><span class="w"> </span><span class="kn">import</span> <span class="n">summary</span> <span class="k">as</span> <span class="n">torch_summary</span>
+        
+        <span class="k">if</span> <span class="n">sample_input_shape</span><span class="p">:</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[bold blue]Model Summary:[/bold blue]&quot;</span><span class="p">)</span>
+            <span class="n">summary_str</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">torch_summary</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">input_size</span><span class="o">=</span><span class="n">sample_input_shape</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Panel</span><span class="p">(</span><span class="n">summary_str</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Model Architecture&quot;</span><span class="p">,</span> <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1"># Basic parameter count</span>
+            <span class="n">total_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+            <span class="n">trainable_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">)</span>
+            
+            <span class="n">info_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Model: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span>
+<span class="s2">Total Parameters: </span><span class="si">{</span><span class="n">format_number</span><span class="p">(</span><span class="n">total_params</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">Trainable Parameters: </span><span class="si">{</span><span class="n">format_number</span><span class="p">(</span><span class="n">trainable_params</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">            &quot;&quot;&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            
+            <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Panel</span><span class="p">(</span><span class="n">info_text</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Model Info&quot;</span><span class="p">,</span> <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">))</span>
+            
+    <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+        <span class="c1"># Fallback if torchinfo not available</span>
+        <span class="n">total_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">())</span>
+        <span class="n">trainable_params</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">()</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">)</span>
+        
+        <span class="n">info_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Model: </span><span class="si">{</span><span class="n">model</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span>
+<span class="s2">Total Parameters: </span><span class="si">{</span><span class="n">format_number</span><span class="p">(</span><span class="n">total_params</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">Trainable Parameters: </span><span class="si">{</span><span class="n">format_number</span><span class="p">(</span><span class="n">trainable_params</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="si">}</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+        
+        <span class="n">console</span><span class="o">.</span><span class="n">print</span><span class="p">(</span><span class="n">Panel</span><span class="p">(</span><span class="n">info_text</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Model Info&quot;</span><span class="p">,</span> <span class="n">border_style</span><span class="o">=</span><span class="s2">&quot;blue&quot;</span><span class="p">))</span> </div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Treadmill Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

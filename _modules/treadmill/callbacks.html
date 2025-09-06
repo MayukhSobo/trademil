@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>treadmill.callbacks &mdash; Treadmill  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9a2dae69"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Treadmill
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Treadmill</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">treadmill.callbacks</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for treadmill.callbacks</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Callback system for Treadmill training framework.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">torch</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span><span class="p">,</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+
+<div class="viewcode-block" id="Callback">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">Callback</span><span class="p">(</span><span class="n">ABC</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Base class for all callbacks.&quot;&quot;&quot;</span>
+    
+<div class="viewcode-block" id="Callback.on_train_start">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback.on_train_start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_train_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called at the start of training.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+    
+<div class="viewcode-block" id="Callback.on_train_end">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback.on_train_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_train_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called at the end of training.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+        
+<div class="viewcode-block" id="Callback.on_epoch_start">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback.on_epoch_start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_epoch_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called at the start of each epoch.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+        
+<div class="viewcode-block" id="Callback.on_epoch_end">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback.on_epoch_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called at the end of each epoch.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+        
+<div class="viewcode-block" id="Callback.on_batch_start">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback.on_batch_start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_batch_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called at the start of each batch.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+        
+<div class="viewcode-block" id="Callback.on_batch_end">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback.on_batch_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_batch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called at the end of each batch.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+        
+<div class="viewcode-block" id="Callback.on_validation_start">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback.on_validation_start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_validation_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called at the start of validation.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+        
+<div class="viewcode-block" id="Callback.on_validation_end">
+<a class="viewcode-back" href="../../api.html#treadmill.Callback.on_validation_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_validation_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called at the end of validation.&quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="EarlyStopping">
+<a class="viewcode-back" href="../../api.html#treadmill.EarlyStopping">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">EarlyStopping</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Early stopping callback to prevent overfitting.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">monitor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;val_loss&quot;</span><span class="p">,</span> <span class="n">patience</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">10</span><span class="p">,</span> 
+                 <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span> <span class="n">min_delta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize early stopping callback.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            monitor: Metric to monitor for early stopping</span>
+<span class="sd">            patience: Number of epochs with no improvement to wait</span>
+<span class="sd">            mode: &quot;min&quot; for metrics that should decrease, &quot;max&quot; for those that should increase</span>
+<span class="sd">            min_delta: Minimum change to qualify as an improvement</span>
+<span class="sd">            verbose: Whether to print early stopping messages</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">=</span> <span class="n">monitor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">patience</span> <span class="o">=</span> <span class="n">patience</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_delta</span> <span class="o">=</span> <span class="n">min_delta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopped_epoch</span> <span class="o">=</span> <span class="mi">0</span>
+        
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">monitor_op</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">current</span><span class="p">,</span> <span class="n">best</span><span class="p">:</span> <span class="n">current</span> <span class="o">&lt;</span> <span class="p">(</span><span class="n">best</span> <span class="o">-</span> <span class="n">min_delta</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">monitor_op</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">current</span><span class="p">,</span> <span class="n">best</span><span class="p">:</span> <span class="n">current</span> <span class="o">&gt;</span> <span class="p">(</span><span class="n">best</span> <span class="o">+</span> <span class="n">min_delta</span><span class="p">)</span>  
+            <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span> <span class="o">=</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+    
+<div class="viewcode-block" id="EarlyStopping.on_epoch_end">
+<a class="viewcode-back" href="../../api.html#treadmill.EarlyStopping.on_epoch_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Check for early stopping condition.&quot;&quot;&quot;</span>
+        <span class="n">current_value</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="p">)</span>
+        
+        <span class="k">if</span> <span class="n">current_value</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Early stopping metric &#39;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="si">}</span><span class="s2">&#39; not found in metrics&quot;</span><span class="p">)</span>
+            <span class="k">return</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">monitor_op</span><span class="p">(</span><span class="n">current_value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span> <span class="o">=</span> <span class="n">current_value</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">wait</span> <span class="o">+=</span> <span class="mi">1</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">wait</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">patience</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">stopped_epoch</span> <span class="o">=</span> <span class="n">epoch</span>
+                <span class="n">trainer</span><span class="o">.</span><span class="n">stop_training</span> <span class="o">=</span> <span class="kc">True</span>
+                
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Early stopping triggered after </span><span class="si">{</span><span class="n">epoch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2"> epochs&quot;</span><span class="p">)</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Best </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">best_value</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+    
+<div class="viewcode-block" id="EarlyStopping.on_train_end">
+<a class="viewcode-back" href="../../api.html#treadmill.EarlyStopping.on_train_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_train_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Print early stopping summary.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopped_epoch</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training stopped early at epoch </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">stopped_epoch</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ModelCheckpoint">
+<a class="viewcode-back" href="../../api.html#treadmill.ModelCheckpoint">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">ModelCheckpoint</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Save model checkpoints during training.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">filepath</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">monitor</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;val_loss&quot;</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;min&quot;</span><span class="p">,</span>
+                 <span class="n">save_best_only</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">save_freq</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
+                 <span class="n">save_format</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;pt&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize model checkpoint callback.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            filepath: Path to save checkpoints (can include epoch/metric placeholders)</span>
+<span class="sd">            monitor: Metric to monitor for best model selection</span>
+<span class="sd">            mode: &quot;min&quot; or &quot;max&quot; for the monitored metric</span>
+<span class="sd">            save_best_only: Whether to only save the best model</span>
+<span class="sd">            save_freq: Frequency of saving (every N epochs)</span>
+<span class="sd">            verbose: Whether to print checkpoint messages</span>
+<span class="sd">            save_format: Format to save model (&quot;pt&quot;, &quot;pth&quot;, &quot;pkl&quot;, &quot;safetensors&quot;, &quot;onnx&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">monitor</span> <span class="o">=</span> <span class="n">monitor</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_best_only</span> <span class="o">=</span> <span class="n">save_best_only</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_freq</span> <span class="o">=</span> <span class="n">save_freq</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_format</span> <span class="o">=</span> <span class="n">save_format</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">inf</span> <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span> <span class="k">else</span> <span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">inf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epochs_since_last_save</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_model_path</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Track best model path for cleanup</span>
+        
+        <span class="c1"># Create directory if it doesn&#39;t exist</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">filepath</span><span class="p">)</span> <span class="k">else</span> <span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="ModelCheckpoint.on_epoch_end">
+<a class="viewcode-back" href="../../api.html#treadmill.ModelCheckpoint.on_epoch_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save checkpoint if conditions are met.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">epochs_since_last_save</span> <span class="o">+=</span> <span class="mi">1</span>
+        
+        <span class="n">current_value</span> <span class="o">=</span> <span class="n">metrics</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">monitor</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">should_save</span> <span class="o">=</span> <span class="kc">False</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_best_only</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s2">&quot;min&quot;</span><span class="p">:</span>
+                <span class="n">should_save</span> <span class="o">=</span> <span class="n">current_value</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">should_save</span> <span class="o">=</span> <span class="n">current_value</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span>
+                
+            <span class="k">if</span> <span class="n">should_save</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">best_value</span> <span class="o">=</span> <span class="n">current_value</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">should_save</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">epochs_since_last_save</span> <span class="o">&gt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_freq</span>
+        
+        <span class="k">if</span> <span class="n">should_save</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">epochs_since_last_save</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_save_checkpoint</span><span class="p">(</span><span class="n">trainer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">,</span> <span class="n">metrics</span><span class="p">)</span></div>
+
+    
+    <span class="k">def</span><span class="w"> </span><span class="nf">_save_checkpoint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">]):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Save the actual checkpoint.&quot;&quot;&quot;</span>
+        <span class="c1"># Format filepath with epoch and metrics</span>
+        <span class="n">filepath</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filepath</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">epoch</span><span class="o">=</span><span class="n">epoch</span><span class="p">,</span> <span class="o">**</span><span class="n">metrics</span><span class="p">)</span>
+        
+        <span class="c1"># Ensure correct file extension</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">filepath</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">save_format</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span>
+            <span class="n">filepath</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">filepath</span><span class="o">.</span><span class="n">rsplit</span><span class="p">(</span><span class="s1">&#39;.&#39;</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">save_format</span><span class="si">}</span><span class="s2">&quot;</span>
+        
+        <span class="c1"># Prepare checkpoint data</span>
+        <span class="n">checkpoint</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">epoch</span><span class="p">,</span>
+            <span class="s2">&quot;model_state_dict&quot;</span><span class="p">:</span> <span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s2">&quot;optimizer_state_dict&quot;</span><span class="p">:</span> <span class="n">trainer</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">state_dict</span><span class="p">(),</span>
+            <span class="s2">&quot;metrics&quot;</span><span class="p">:</span> <span class="n">metrics</span><span class="p">,</span>
+            <span class="s2">&quot;config&quot;</span><span class="p">:</span> <span class="n">trainer</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="vm">__dict__</span> <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;__dict__&quot;</span><span class="p">)</span> <span class="k">else</span> <span class="n">trainer</span><span class="o">.</span><span class="n">config</span>
+        <span class="p">}</span>
+        
+        <span class="k">if</span> <span class="n">trainer</span><span class="o">.</span><span class="n">scheduler</span><span class="p">:</span>
+            <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;scheduler_state_dict&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">scheduler</span><span class="o">.</span><span class="n">state_dict</span><span class="p">()</span>
+        
+        <span class="c1"># Save checkpoint based on format</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_format</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;pt&quot;</span><span class="p">,</span> <span class="s2">&quot;pth&quot;</span><span class="p">]:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_format</span> <span class="o">==</span> <span class="s2">&quot;pkl&quot;</span><span class="p">:</span>
+            <span class="kn">import</span><span class="w"> </span><span class="nn">pickle</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">filepath</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_format</span> <span class="o">==</span> <span class="s2">&quot;safetensors&quot;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">safetensors.torch</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_file</span>
+                <span class="c1"># Convert state dicts to flat dict for safetensors</span>
+                <span class="n">flat_dict</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;model_state_dict&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">flat_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;model.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">checkpoint</span><span class="p">[</span><span class="s2">&quot;optimizer_state_dict&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">Tensor</span><span class="p">):</span>
+                        <span class="n">flat_dict</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;optimizer.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+                <span class="n">save_file</span><span class="p">(</span><span class="n">flat_dict</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: safetensors not available, falling back to .pt format&quot;</span><span class="p">)</span>
+                <span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.safetensors&#39;</span><span class="p">,</span> <span class="s1">&#39;.pt&#39;</span><span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_format</span> <span class="o">==</span> <span class="s2">&quot;onnx&quot;</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1"># Export model to ONNX format</span>
+                <span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+                <span class="n">onnx_filepath</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.onnx&#39;</span><span class="p">,</span> <span class="s1">&#39;_model.onnx&#39;</span><span class="p">)</span>
+                
+                <span class="c1"># Need dummy input to export ONNX - try to get from dataloader</span>
+                <span class="n">dummy_input</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">batch</span> <span class="ow">in</span> <span class="n">trainer</span><span class="o">.</span><span class="n">train_dataloader</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">batch</span><span class="p">,</span> <span class="p">(</span><span class="nb">list</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                            <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[</span><span class="mi">0</span><span class="p">][:</span><span class="mi">1</span><span class="p">]</span>  <span class="c1"># Take first sample</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">batch</span><span class="p">[:</span><span class="mi">1</span><span class="p">]</span>
+                        <span class="k">break</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: Could not get sample input for ONNX export&quot;</span><span class="p">)</span>
+                
+                <span class="k">if</span> <span class="n">dummy_input</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">dummy_input</span> <span class="o">=</span> <span class="n">dummy_input</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">device</span><span class="p">)</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">onnx</span><span class="o">.</span><span class="n">export</span><span class="p">(</span>
+                        <span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
+                        <span class="n">dummy_input</span><span class="p">,</span>
+                        <span class="n">onnx_filepath</span><span class="p">,</span>
+                        <span class="n">export_params</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">opset_version</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span>
+                        <span class="n">do_constant_folding</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+                        <span class="n">input_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;input&#39;</span><span class="p">],</span>
+                        <span class="n">output_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;output&#39;</span><span class="p">],</span>
+                        <span class="n">dynamic_axes</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;input&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;batch_size&#39;</span><span class="p">},</span> <span class="s1">&#39;output&#39;</span><span class="p">:</span> <span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="s1">&#39;batch_size&#39;</span><span class="p">}}</span>
+                    <span class="p">)</span>
+                    
+                    <span class="c1"># Also save training checkpoint separately</span>
+                    <span class="n">checkpoint_filepath</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.onnx&#39;</span><span class="p">,</span> <span class="s1">&#39;_checkpoint.pt&#39;</span><span class="p">)</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">checkpoint_filepath</span><span class="p">)</span>
+                    
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;ONNX model saved: </span><span class="si">{</span><span class="n">onnx_filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Training checkpoint saved: </span><span class="si">{</span><span class="n">checkpoint_filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: ONNX export failed - no valid input found, falling back to .pt&quot;</span><span class="p">)</span>
+                    <span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.onnx&#39;</span><span class="p">,</span> <span class="s1">&#39;.pt&#39;</span><span class="p">)</span>
+                    <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+                    
+            <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: ONNX not available, falling back to .pt format&quot;</span><span class="p">)</span>
+                <span class="n">filepath</span> <span class="o">=</span> <span class="n">filepath</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;.onnx&#39;</span><span class="p">,</span> <span class="s1">&#39;.pt&#39;</span><span class="p">)</span>
+                <span class="n">torch</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">checkpoint</span><span class="p">,</span> <span class="n">filepath</span><span class="p">)</span>
+        
+        <span class="c1"># Clean up previous best model if we&#39;re only keeping the best</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_best_only</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_model_path</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">best_model_path</span> <span class="o">!=</span> <span class="n">filepath</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">best_model_path</span><span class="p">):</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">best_model_path</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Removed previous checkpoint: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">best_model_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Warning: Could not remove old checkpoint: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">best_model_path</span> <span class="o">=</span> <span class="n">filepath</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Checkpoint saved: </span><span class="si">{</span><span class="n">filepath</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="LearningRateLogger">
+<a class="viewcode-back" href="../../api.html#treadmill.LearningRateLogger">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">LearningRateLogger</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log learning rate changes during training.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">verbose</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="o">=</span> <span class="n">verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">lr_history</span> <span class="o">=</span> <span class="p">[]</span>
+    
+<div class="viewcode-block" id="LearningRateLogger.on_epoch_start">
+<a class="viewcode-back" href="../../api.html#treadmill.LearningRateLogger.on_epoch_start">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_epoch_start</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log current learning rate.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">trainer</span><span class="o">.</span><span class="n">optimizer</span><span class="p">:</span>
+            <span class="n">current_lr</span> <span class="o">=</span> <span class="n">trainer</span><span class="o">.</span><span class="n">optimizer</span><span class="o">.</span><span class="n">param_groups</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;lr&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">lr_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_lr</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">lr_history</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">prev_lr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lr_history</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+                <span class="k">if</span> <span class="nb">abs</span><span class="p">(</span><span class="n">current_lr</span> <span class="o">-</span> <span class="n">prev_lr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-8</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Learning rate changed: </span><span class="si">{</span><span class="n">prev_lr</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">current_lr</span><span class="si">:</span><span class="s2">.2e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="GradientClipping">
+<a class="viewcode-back" href="../../api.html#treadmill.GradientClipping">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">GradientClipping</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Apply gradient clipping during training.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">max_norm</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">norm_type</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">2.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize gradient clipping callback.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            max_norm: Maximum norm of gradients</span>
+<span class="sd">            norm_type: Type of norm to use (2.0 for L2 norm)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span> <span class="o">=</span> <span class="n">max_norm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_type</span> <span class="o">=</span> <span class="n">norm_type</span>
+    
+<div class="viewcode-block" id="GradientClipping.on_batch_end">
+<a class="viewcode-back" href="../../api.html#treadmill.GradientClipping.on_batch_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_batch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">batch_idx</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply gradient clipping after backward pass.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">training</span><span class="p">:</span>
+            <span class="n">torch</span><span class="o">.</span><span class="n">nn</span><span class="o">.</span><span class="n">utils</span><span class="o">.</span><span class="n">clip_grad_norm_</span><span class="p">(</span><span class="n">trainer</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">parameters</span><span class="p">(),</span> 
+                                         <span class="bp">self</span><span class="o">.</span><span class="n">max_norm</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm_type</span><span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="MetricsLogger">
+<a class="viewcode-back" href="../../api.html#treadmill.MetricsLogger">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MetricsLogger</span><span class="p">(</span><span class="n">Callback</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Log metrics to various destinations.&quot;&quot;&quot;</span>
+    
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">log_file</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initialize metrics logger.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            log_file: Optional file to log metrics to</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_file</span> <span class="o">=</span> <span class="n">log_file</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics_history</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
+            <span class="c1"># Write header</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;epoch,&quot;</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="MetricsLogger.on_epoch_end">
+<a class="viewcode-back" href="../../api.html#treadmill.MetricsLogger.on_epoch_end">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">on_epoch_end</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">trainer</span><span class="p">,</span> <span class="n">epoch</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">metrics</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Log epoch metrics.&quot;&quot;&quot;</span>
+        <span class="c1"># Add to history</span>
+        <span class="n">epoch_data</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;epoch&quot;</span><span class="p">:</span> <span class="n">epoch</span><span class="p">,</span> <span class="o">**</span><span class="n">metrics</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">metrics_history</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">epoch_data</span><span class="p">)</span>
+        
+        <span class="c1"># Log to file if specified</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">log_file</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">metrics_history</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="c1"># Write header on first epoch</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                    <span class="n">header</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">epoch_data</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">header</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+            
+            <span class="c1"># Write metrics</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log_file</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">values</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">epoch_data</span><span class="o">.</span><span class="n">values</span><span class="p">()])</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">values</span> <span class="o">+</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> </div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Treadmill Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

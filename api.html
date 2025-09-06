@@ -1,0 +1,1088 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; Treadmill  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9a2dae69"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Treadmill Documentation" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            Treadmill
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.Callback"><code class="docutils literal notranslate"><span class="pre">Callback</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Callback.on_batch_end"><code class="docutils literal notranslate"><span class="pre">Callback.on_batch_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Callback.on_batch_start"><code class="docutils literal notranslate"><span class="pre">Callback.on_batch_start()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Callback.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">Callback.on_epoch_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Callback.on_epoch_start"><code class="docutils literal notranslate"><span class="pre">Callback.on_epoch_start()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Callback.on_train_end"><code class="docutils literal notranslate"><span class="pre">Callback.on_train_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Callback.on_train_start"><code class="docutils literal notranslate"><span class="pre">Callback.on_train_start()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Callback.on_validation_end"><code class="docutils literal notranslate"><span class="pre">Callback.on_validation_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Callback.on_validation_start"><code class="docutils literal notranslate"><span class="pre">Callback.on_validation_start()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.EarlyStopping"><code class="docutils literal notranslate"><span class="pre">EarlyStopping</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.EarlyStopping.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">EarlyStopping.on_epoch_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.EarlyStopping.on_train_end"><code class="docutils literal notranslate"><span class="pre">EarlyStopping.on_train_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.MetricsTracker"><code class="docutils literal notranslate"><span class="pre">MetricsTracker</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.MetricsTracker.end_epoch"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.end_epoch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.MetricsTracker.get_best_metrics"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.get_best_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.MetricsTracker.get_current_metrics"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.get_current_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.MetricsTracker.get_epoch_metrics"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.get_epoch_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.MetricsTracker.is_best_epoch"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.is_best_epoch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.MetricsTracker.reset"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.reset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.MetricsTracker.update"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.ModelCheckpoint"><code class="docutils literal notranslate"><span class="pre">ModelCheckpoint</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.ModelCheckpoint.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ModelCheckpoint.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.OptimizerConfig"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.OptimizerConfig.lr"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.lr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.OptimizerConfig.optimizer_class"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.optimizer_class</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.OptimizerConfig.params"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.OptimizerConfig.weight_decay"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.weight_decay</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.SchedulerConfig"><code class="docutils literal notranslate"><span class="pre">SchedulerConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.SchedulerConfig.params"><code class="docutils literal notranslate"><span class="pre">SchedulerConfig.params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.SchedulerConfig.scheduler_class"><code class="docutils literal notranslate"><span class="pre">SchedulerConfig.scheduler_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Trainer.load_checkpoint"><code class="docutils literal notranslate"><span class="pre">Trainer.load_checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Trainer.save_checkpoint"><code class="docutils literal notranslate"><span class="pre">Trainer.save_checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.Trainer.train"><code class="docutils literal notranslate"><span class="pre">Trainer.train()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.TrainingConfig"><code class="docutils literal notranslate"><span class="pre">TrainingConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.accumulate_grad_batches"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.accumulate_grad_batches</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.checkpoint_dir"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.checkpoint_dir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.custom_backward_fn"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.custom_backward_fn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.custom_forward_fn"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.custom_forward_fn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.device"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.early_stopping_patience"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stopping_patience</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.epochs"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.epochs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.grad_clip_norm"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.grad_clip_norm</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.mixed_precision"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.mixed_precision</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.optimizer"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.optimizer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.overfit_threshold"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.overfit_threshold</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.print_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.print_every</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.progress_bar"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.progress_bar</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.save_best_model"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.save_best_model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.scheduler"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.scheduler</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.TrainingConfig.validate_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.validate_every</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.format_metrics"><code class="docutils literal notranslate"><span class="pre">format_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.format_time"><code class="docutils literal notranslate"><span class="pre">format_time()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.trainer.Trainer"><code class="docutils literal notranslate"><span class="pre">Trainer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.trainer.Trainer.load_checkpoint"><code class="docutils literal notranslate"><span class="pre">Trainer.load_checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.trainer.Trainer.save_checkpoint"><code class="docutils literal notranslate"><span class="pre">Trainer.save_checkpoint()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.trainer.Trainer.train"><code class="docutils literal notranslate"><span class="pre">Trainer.train()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.config.OptimizerConfig"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.OptimizerConfig.lr"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.lr</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.OptimizerConfig.optimizer_class"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.optimizer_class</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.OptimizerConfig.params"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.OptimizerConfig.weight_decay"><code class="docutils literal notranslate"><span class="pre">OptimizerConfig.weight_decay</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.config.SchedulerConfig"><code class="docutils literal notranslate"><span class="pre">SchedulerConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.SchedulerConfig.params"><code class="docutils literal notranslate"><span class="pre">SchedulerConfig.params</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.SchedulerConfig.scheduler_class"><code class="docutils literal notranslate"><span class="pre">SchedulerConfig.scheduler_class</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.config.TrainingConfig"><code class="docutils literal notranslate"><span class="pre">TrainingConfig</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.accumulate_grad_batches"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.accumulate_grad_batches</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.checkpoint_dir"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.checkpoint_dir</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.custom_backward_fn"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.custom_backward_fn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.custom_forward_fn"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.custom_forward_fn</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.device"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.device</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.early_stopping_patience"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.early_stopping_patience</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.epochs"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.epochs</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.grad_clip_norm"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.grad_clip_norm</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.mixed_precision"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.mixed_precision</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.optimizer"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.optimizer</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.overfit_threshold"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.overfit_threshold</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.print_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.print_every</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.progress_bar"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.progress_bar</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.save_best_model"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.save_best_model</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.scheduler"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.scheduler</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.config.TrainingConfig.validate_every"><code class="docutils literal notranslate"><span class="pre">TrainingConfig.validate_every</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.metrics.MetricsTracker"><code class="docutils literal notranslate"><span class="pre">MetricsTracker</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.MetricsTracker.end_epoch"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.end_epoch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.MetricsTracker.get_best_metrics"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.get_best_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.MetricsTracker.get_current_metrics"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.get_current_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.MetricsTracker.get_epoch_metrics"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.get_epoch_metrics()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.MetricsTracker.is_best_epoch"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.is_best_epoch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.MetricsTracker.reset"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.reset()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.MetricsTracker.update"><code class="docutils literal notranslate"><span class="pre">MetricsTracker.update()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.metrics.StandardMetrics"><code class="docutils literal notranslate"><span class="pre">StandardMetrics</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.StandardMetrics.accuracy"><code class="docutils literal notranslate"><span class="pre">StandardMetrics.accuracy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.StandardMetrics.f1_score"><code class="docutils literal notranslate"><span class="pre">StandardMetrics.f1_score()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.StandardMetrics.mean_absolute_error"><code class="docutils literal notranslate"><span class="pre">StandardMetrics.mean_absolute_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.StandardMetrics.mean_squared_error"><code class="docutils literal notranslate"><span class="pre">StandardMetrics.mean_squared_error()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.metrics.StandardMetrics.top_k_accuracy"><code class="docutils literal notranslate"><span class="pre">StandardMetrics.top_k_accuracy()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.metrics.compute_metrics"><code class="docutils literal notranslate"><span class="pre">compute_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.callbacks.Callback"><code class="docutils literal notranslate"><span class="pre">Callback</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.Callback.on_batch_end"><code class="docutils literal notranslate"><span class="pre">Callback.on_batch_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.Callback.on_batch_start"><code class="docutils literal notranslate"><span class="pre">Callback.on_batch_start()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.Callback.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">Callback.on_epoch_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.Callback.on_epoch_start"><code class="docutils literal notranslate"><span class="pre">Callback.on_epoch_start()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.Callback.on_train_end"><code class="docutils literal notranslate"><span class="pre">Callback.on_train_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.Callback.on_train_start"><code class="docutils literal notranslate"><span class="pre">Callback.on_train_start()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.Callback.on_validation_end"><code class="docutils literal notranslate"><span class="pre">Callback.on_validation_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.Callback.on_validation_start"><code class="docutils literal notranslate"><span class="pre">Callback.on_validation_start()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.callbacks.EarlyStopping"><code class="docutils literal notranslate"><span class="pre">EarlyStopping</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.EarlyStopping.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">EarlyStopping.on_epoch_end()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.EarlyStopping.on_train_end"><code class="docutils literal notranslate"><span class="pre">EarlyStopping.on_train_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.callbacks.GradientClipping"><code class="docutils literal notranslate"><span class="pre">GradientClipping</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.GradientClipping.on_batch_end"><code class="docutils literal notranslate"><span class="pre">GradientClipping.on_batch_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.callbacks.LearningRateLogger"><code class="docutils literal notranslate"><span class="pre">LearningRateLogger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.LearningRateLogger.on_epoch_start"><code class="docutils literal notranslate"><span class="pre">LearningRateLogger.on_epoch_start()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.callbacks.MetricsLogger"><code class="docutils literal notranslate"><span class="pre">MetricsLogger</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.MetricsLogger.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">MetricsLogger.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.callbacks.ModelCheckpoint"><code class="docutils literal notranslate"><span class="pre">ModelCheckpoint</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.callbacks.ModelCheckpoint.on_epoch_end"><code class="docutils literal notranslate"><span class="pre">ModelCheckpoint.on_epoch_end()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.utils.ProgressTracker"><code class="docutils literal notranslate"><span class="pre">ProgressTracker</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.utils.ProgressTracker.finish_training"><code class="docutils literal notranslate"><span class="pre">ProgressTracker.finish_training()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.utils.ProgressTracker.print_batch_progress"><code class="docutils literal notranslate"><span class="pre">ProgressTracker.print_batch_progress()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.utils.ProgressTracker.print_epoch_header"><code class="docutils literal notranslate"><span class="pre">ProgressTracker.print_epoch_header()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.utils.ProgressTracker.print_epoch_summary"><code class="docutils literal notranslate"><span class="pre">ProgressTracker.print_epoch_summary()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.utils.ProgressTracker.start_epoch"><code class="docutils literal notranslate"><span class="pre">ProgressTracker.start_epoch()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#treadmill.utils.ProgressTracker.start_training"><code class="docutils literal notranslate"><span class="pre">ProgressTracker.start_training()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.utils.detect_terminal_theme"><code class="docutils literal notranslate"><span class="pre">detect_terminal_theme()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.utils.format_metrics"><code class="docutils literal notranslate"><span class="pre">format_metrics()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.utils.format_number"><code class="docutils literal notranslate"><span class="pre">format_number()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.utils.format_time"><code class="docutils literal notranslate"><span class="pre">format_time()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.utils.get_theme_colors"><code class="docutils literal notranslate"><span class="pre">get_theme_colors()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#treadmill.utils.print_model_summary"><code class="docutils literal notranslate"><span class="pre">print_model_summary()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">Treadmill</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/api.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-treadmill">
+<span id="api-reference"></span><h1>API Reference<a class="headerlink" href="#module-treadmill" title="Link to this heading"></a></h1>
+<p>Treadmill - A Clean and Modular PyTorch Training Framework</p>
+<p>A training framework designed specifically for PyTorch that provides clean,
+easy-to-understand training loops with modular components.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.Callback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">Callback</span></span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Base class for all callbacks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Callback.on_batch_end">
+<span class="sig-name descname"><span class="pre">on_batch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_batch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback.on_batch_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of each batch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Callback.on_batch_start">
+<span class="sig-name descname"><span class="pre">on_batch_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_batch_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback.on_batch_start" title="Link to this definition"></a></dt>
+<dd><p>Called at the start of each batch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Callback.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback.on_epoch_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of each epoch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Callback.on_epoch_start">
+<span class="sig-name descname"><span class="pre">on_epoch_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_epoch_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback.on_epoch_start" title="Link to this definition"></a></dt>
+<dd><p>Called at the start of each epoch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Callback.on_train_end">
+<span class="sig-name descname"><span class="pre">on_train_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_train_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback.on_train_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Callback.on_train_start">
+<span class="sig-name descname"><span class="pre">on_train_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_train_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback.on_train_start" title="Link to this definition"></a></dt>
+<dd><p>Called at the start of training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Callback.on_validation_end">
+<span class="sig-name descname"><span class="pre">on_validation_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_validation_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback.on_validation_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of validation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Callback.on_validation_start">
+<span class="sig-name descname"><span class="pre">on_validation_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_validation_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Callback.on_validation_start" title="Link to this definition"></a></dt>
+<dd><p>Called at the start of validation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.EarlyStopping">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">EarlyStopping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monitor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'val_loss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#EarlyStopping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.EarlyStopping" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<p>Early stopping callback to prevent overfitting.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.EarlyStopping.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#EarlyStopping.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.EarlyStopping.on_epoch_end" title="Link to this definition"></a></dt>
+<dd><p>Check for early stopping condition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.EarlyStopping.on_train_end">
+<span class="sig-name descname"><span class="pre">on_train_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#EarlyStopping.on_train_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.EarlyStopping.on_train_end" title="Link to this definition"></a></dt>
+<dd><p>Print early stopping summary.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.MetricsTracker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">MetricsTracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.MetricsTracker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Track and compute metrics during training.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.MetricsTracker.end_epoch">
+<span class="sig-name descname"><span class="pre">end_epoch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.end_epoch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.MetricsTracker.end_epoch" title="Link to this definition"></a></dt>
+<dd><p>Compute epoch-level metrics from batch metrics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.MetricsTracker.get_best_metrics">
+<span class="sig-name descname"><span class="pre">get_best_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.get_best_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.MetricsTracker.get_best_metrics" title="Link to this definition"></a></dt>
+<dd><p>Get best metrics for the specified mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.MetricsTracker.get_current_metrics">
+<span class="sig-name descname"><span class="pre">get_current_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.get_current_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.MetricsTracker.get_current_metrics" title="Link to this definition"></a></dt>
+<dd><p>Get current metrics for the specified mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.MetricsTracker.get_epoch_metrics">
+<span class="sig-name descname"><span class="pre">get_epoch_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.get_epoch_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.MetricsTracker.get_epoch_metrics" title="Link to this definition"></a></dt>
+<dd><p>Get all epoch metrics for the specified mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.MetricsTracker.is_best_epoch">
+<span class="sig-name descname"><span class="pre">is_best_epoch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'val'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.is_best_epoch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.MetricsTracker.is_best_epoch" title="Link to this definition"></a></dt>
+<dd><p>Check if current epoch achieved best metric value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.MetricsTracker.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.MetricsTracker.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset all tracked metrics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.MetricsTracker.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.MetricsTracker.update" title="Link to this definition"></a></dt>
+<dd><p>Update metrics for current batch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics</strong> – Dictionary of metric name -&gt; value</p></li>
+<li><p><strong>mode</strong> – “train” or “val”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.ModelCheckpoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">ModelCheckpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monitor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'val_loss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_best_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_freq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#ModelCheckpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.ModelCheckpoint" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<p>Save model checkpoints during training.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.ModelCheckpoint.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#ModelCheckpoint.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.ModelCheckpoint.on_epoch_end" title="Link to this definition"></a></dt>
+<dd><p>Save checkpoint if conditions are met.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.OptimizerConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">OptimizerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer_class:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">type</span> <span class="pre">=</span> <span class="pre">'Adam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/config.html#OptimizerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.OptimizerConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for optimizer setup.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.OptimizerConfig.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.001</span></em><a class="headerlink" href="#treadmill.OptimizerConfig.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.OptimizerConfig.optimizer_class">
+<span class="sig-name descname"><span class="pre">optimizer_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Adam'</span></em><a class="headerlink" href="#treadmill.OptimizerConfig.optimizer_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.OptimizerConfig.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#treadmill.OptimizerConfig.params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.OptimizerConfig.weight_decay">
+<span class="sig-name descname"><span class="pre">weight_decay</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#treadmill.OptimizerConfig.weight_decay" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.SchedulerConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">SchedulerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scheduler_class:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">type</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/config.html#SchedulerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.SchedulerConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for learning rate scheduler.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.SchedulerConfig.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#treadmill.SchedulerConfig.params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.SchedulerConfig.scheduler_class">
+<span class="sig-name descname"><span class="pre">scheduler_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.SchedulerConfig.scheduler_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.Trainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#treadmill.config.TrainingConfig" title="treadmill.config.TrainingConfig"><span class="pre">TrainingConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_fns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><span class="pre">Callback</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/trainer.html#Trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Trainer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main training class that orchestrates the entire training process.</p>
+<p>This class provides a clean, modular interface for PyTorch model training
+with support for validation, callbacks, metrics tracking, and more.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Trainer.load_checkpoint">
+<span class="sig-name descname"><span class="pre">load_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resume_training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/trainer.html#Trainer.load_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Trainer.load_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Load a training checkpoint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Trainer.save_checkpoint">
+<span class="sig-name descname"><span class="pre">save_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/trainer.html#Trainer.save_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Trainer.save_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Save a training checkpoint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.Trainer.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/trainer.html#Trainer.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.Trainer.train" title="Link to this definition"></a></dt>
+<dd><p>Execute the complete training loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary containing training history and final metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">TrainingConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epochs:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer:</span> <span class="pre">~treadmill.config.OptimizerConfig</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler:</span> <span class="pre">~treadmill.config.SchedulerConfig</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_every:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_patience:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_best_model:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_dir:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'./checkpoints'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_every:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_bar:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_forward_fn:</span> <span class="pre">~typing.Callable</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_backward_fn:</span> <span class="pre">~typing.Callable</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_clip_norm:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accumulate_grad_batches:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixed_precision:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overfit_threshold:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/config.html#TrainingConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.TrainingConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main training configuration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.accumulate_grad_batches">
+<span class="sig-name descname"><span class="pre">accumulate_grad_batches</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#treadmill.TrainingConfig.accumulate_grad_batches" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.checkpoint_dir">
+<span class="sig-name descname"><span class="pre">checkpoint_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'./checkpoints'</span></em><a class="headerlink" href="#treadmill.TrainingConfig.checkpoint_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.custom_backward_fn">
+<span class="sig-name descname"><span class="pre">custom_backward_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.TrainingConfig.custom_backward_fn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.custom_forward_fn">
+<span class="sig-name descname"><span class="pre">custom_forward_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.TrainingConfig.custom_forward_fn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.device">
+<span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'auto'</span></em><a class="headerlink" href="#treadmill.TrainingConfig.device" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.early_stopping_patience">
+<span class="sig-name descname"><span class="pre">early_stopping_patience</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.TrainingConfig.early_stopping_patience" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.epochs">
+<span class="sig-name descname"><span class="pre">epochs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#treadmill.TrainingConfig.epochs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.grad_clip_norm">
+<span class="sig-name descname"><span class="pre">grad_clip_norm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.TrainingConfig.grad_clip_norm" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.mixed_precision">
+<span class="sig-name descname"><span class="pre">mixed_precision</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#treadmill.TrainingConfig.mixed_precision" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.optimizer">
+<span class="sig-name descname"><span class="pre">optimizer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#treadmill.config.OptimizerConfig" title="treadmill.config.OptimizerConfig"><span class="pre">OptimizerConfig</span></a></em><a class="headerlink" href="#treadmill.TrainingConfig.optimizer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.overfit_threshold">
+<span class="sig-name descname"><span class="pre">overfit_threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#treadmill.TrainingConfig.overfit_threshold" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.print_every">
+<span class="sig-name descname"><span class="pre">print_every</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#treadmill.TrainingConfig.print_every" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.progress_bar">
+<span class="sig-name descname"><span class="pre">progress_bar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#treadmill.TrainingConfig.progress_bar" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.save_best_model">
+<span class="sig-name descname"><span class="pre">save_best_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#treadmill.TrainingConfig.save_best_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.scheduler">
+<span class="sig-name descname"><span class="pre">scheduler</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#treadmill.config.SchedulerConfig" title="treadmill.config.SchedulerConfig"><span class="pre">SchedulerConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.TrainingConfig.scheduler" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.TrainingConfig.validate_every">
+<span class="sig-name descname"><span class="pre">validate_every</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#treadmill.TrainingConfig.validate_every" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.format_metrics">
+<span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">format_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/utils.html#format_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.format_metrics" title="Link to this definition"></a></dt>
+<dd><p>Format metrics dictionary for display.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.format_time">
+<span class="sig-prename descclassname"><span class="pre">treadmill.</span></span><span class="sig-name descname"><span class="pre">format_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/treadmill/utils.html#format_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.format_time" title="Link to this definition"></a></dt>
+<dd><p>Format time in seconds to human-readable format.</p>
+</dd></dl>
+
+<p id="module-treadmill.trainer">Main Trainer class for Treadmill framework.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.trainer.Trainer">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.trainer.</span></span><span class="sig-name descname"><span class="pre">Trainer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Module</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#treadmill.config.TrainingConfig" title="treadmill.config.TrainingConfig"><span class="pre">TrainingConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_dataloader</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DataLoader</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_fns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callbacks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><span class="pre">Callback</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/trainer.html#Trainer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.trainer.Trainer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main training class that orchestrates the entire training process.</p>
+<p>This class provides a clean, modular interface for PyTorch model training
+with support for validation, callbacks, metrics tracking, and more.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.trainer.Trainer.load_checkpoint">
+<span class="sig-name descname"><span class="pre">load_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resume_training</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/trainer.html#Trainer.load_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.trainer.Trainer.load_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Load a training checkpoint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.trainer.Trainer.save_checkpoint">
+<span class="sig-name descname"><span class="pre">save_checkpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">additional_info</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/trainer.html#Trainer.save_checkpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.trainer.Trainer.save_checkpoint" title="Link to this definition"></a></dt>
+<dd><p>Save a training checkpoint.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.trainer.Trainer.train">
+<span class="sig-name descname"><span class="pre">train</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/trainer.html#Trainer.train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.trainer.Trainer.train" title="Link to this definition"></a></dt>
+<dd><p>Execute the complete training loop.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Dictionary containing training history and final metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-treadmill.config">Configuration classes for Treadmill training framework.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.config.OptimizerConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.config.</span></span><span class="sig-name descname"><span class="pre">OptimizerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">optimizer_class:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">type</span> <span class="pre">=</span> <span class="pre">'Adam'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lr:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.001</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight_decay:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/config.html#OptimizerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.config.OptimizerConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for optimizer setup.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.OptimizerConfig.lr">
+<span class="sig-name descname"><span class="pre">lr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.001</span></em><a class="headerlink" href="#treadmill.config.OptimizerConfig.lr" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.OptimizerConfig.optimizer_class">
+<span class="sig-name descname"><span class="pre">optimizer_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Adam'</span></em><a class="headerlink" href="#treadmill.config.OptimizerConfig.optimizer_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.OptimizerConfig.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#treadmill.config.OptimizerConfig.params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.OptimizerConfig.weight_decay">
+<span class="sig-name descname"><span class="pre">weight_decay</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.0</span></em><a class="headerlink" href="#treadmill.config.OptimizerConfig.weight_decay" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.config.SchedulerConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.config.</span></span><span class="sig-name descname"><span class="pre">SchedulerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">scheduler_class:</span> <span class="pre">str</span> <span class="pre">|</span> <span class="pre">type</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params:</span> <span class="pre">~typing.Dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/config.html#SchedulerConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.config.SchedulerConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Configuration for learning rate scheduler.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.SchedulerConfig.params">
+<span class="sig-name descname"><span class="pre">params</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#treadmill.config.SchedulerConfig.params" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.SchedulerConfig.scheduler_class">
+<span class="sig-name descname"><span class="pre">scheduler_class</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.config.SchedulerConfig.scheduler_class" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.config.</span></span><span class="sig-name descname"><span class="pre">TrainingConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epochs:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">device:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'auto'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">optimizer:</span> <span class="pre">~treadmill.config.OptimizerConfig</span> <span class="pre">=</span> <span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scheduler:</span> <span class="pre">~treadmill.config.SchedulerConfig</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validate_every:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stopping_patience:</span> <span class="pre">int</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_best_model:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">checkpoint_dir:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'./checkpoints'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_every:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">progress_bar:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_forward_fn:</span> <span class="pre">~typing.Callable</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">custom_backward_fn:</span> <span class="pre">~typing.Callable</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grad_clip_norm:</span> <span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">accumulate_grad_batches:</span> <span class="pre">int</span> <span class="pre">=</span> <span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mixed_precision:</span> <span class="pre">bool</span> <span class="pre">=</span> <span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overfit_threshold:</span> <span class="pre">float</span> <span class="pre">=</span> <span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/config.html#TrainingConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.config.TrainingConfig" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Main training configuration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.accumulate_grad_batches">
+<span class="sig-name descname"><span class="pre">accumulate_grad_batches</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.accumulate_grad_batches" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.checkpoint_dir">
+<span class="sig-name descname"><span class="pre">checkpoint_dir</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'./checkpoints'</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.checkpoint_dir" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.custom_backward_fn">
+<span class="sig-name descname"><span class="pre">custom_backward_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.custom_backward_fn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.custom_forward_fn">
+<span class="sig-name descname"><span class="pre">custom_forward_fn</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.custom_forward_fn" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.device">
+<span class="sig-name descname"><span class="pre">device</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'auto'</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.device" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.early_stopping_patience">
+<span class="sig-name descname"><span class="pre">early_stopping_patience</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.early_stopping_patience" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.epochs">
+<span class="sig-name descname"><span class="pre">epochs</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.epochs" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.grad_clip_norm">
+<span class="sig-name descname"><span class="pre">grad_clip_norm</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.grad_clip_norm" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.mixed_precision">
+<span class="sig-name descname"><span class="pre">mixed_precision</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.mixed_precision" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.optimizer">
+<span class="sig-name descname"><span class="pre">optimizer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#treadmill.config.OptimizerConfig" title="treadmill.config.OptimizerConfig"><span class="pre">OptimizerConfig</span></a></em><a class="headerlink" href="#treadmill.config.TrainingConfig.optimizer" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.overfit_threshold">
+<span class="sig-name descname"><span class="pre">overfit_threshold</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.1</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.overfit_threshold" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.print_every">
+<span class="sig-name descname"><span class="pre">print_every</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.print_every" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.progress_bar">
+<span class="sig-name descname"><span class="pre">progress_bar</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.progress_bar" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.save_best_model">
+<span class="sig-name descname"><span class="pre">save_best_model</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.save_best_model" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.scheduler">
+<span class="sig-name descname"><span class="pre">scheduler</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#treadmill.config.SchedulerConfig" title="treadmill.config.SchedulerConfig"><span class="pre">SchedulerConfig</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.scheduler" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="treadmill.config.TrainingConfig.validate_every">
+<span class="sig-name descname"><span class="pre">validate_every</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#treadmill.config.TrainingConfig.validate_every" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p id="module-treadmill.metrics">Metrics tracking system for Treadmill.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.metrics.MetricsTracker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.metrics.</span></span><span class="sig-name descname"><span class="pre">MetricsTracker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">window_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.MetricsTracker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Track and compute metrics during training.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.MetricsTracker.end_epoch">
+<span class="sig-name descname"><span class="pre">end_epoch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.end_epoch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.MetricsTracker.end_epoch" title="Link to this definition"></a></dt>
+<dd><p>Compute epoch-level metrics from batch metrics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.MetricsTracker.get_best_metrics">
+<span class="sig-name descname"><span class="pre">get_best_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.get_best_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.MetricsTracker.get_best_metrics" title="Link to this definition"></a></dt>
+<dd><p>Get best metrics for the specified mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.MetricsTracker.get_current_metrics">
+<span class="sig-name descname"><span class="pre">get_current_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.get_current_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.MetricsTracker.get_current_metrics" title="Link to this definition"></a></dt>
+<dd><p>Get current metrics for the specified mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.MetricsTracker.get_epoch_metrics">
+<span class="sig-name descname"><span class="pre">get_epoch_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.get_epoch_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.MetricsTracker.get_epoch_metrics" title="Link to this definition"></a></dt>
+<dd><p>Get all epoch metrics for the specified mode.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.MetricsTracker.is_best_epoch">
+<span class="sig-name descname"><span class="pre">is_best_epoch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metric_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'val'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.is_best_epoch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.MetricsTracker.is_best_epoch" title="Link to this definition"></a></dt>
+<dd><p>Check if current epoch achieved best metric value.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.MetricsTracker.reset">
+<span class="sig-name descname"><span class="pre">reset</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.reset"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.MetricsTracker.reset" title="Link to this definition"></a></dt>
+<dd><p>Reset all tracked metrics.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.MetricsTracker.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'train'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/metrics.html#MetricsTracker.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.MetricsTracker.update" title="Link to this definition"></a></dt>
+<dd><p>Update metrics for current batch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>metrics</strong> – Dictionary of metric name -&gt; value</p></li>
+<li><p><strong>mode</strong> – “train” or “val”</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.metrics.StandardMetrics">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.metrics.</span></span><span class="sig-name descname"><span class="pre">StandardMetrics</span></span><a class="reference internal" href="_modules/treadmill/metrics.html#StandardMetrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.StandardMetrics" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Collection of standard metrics for common tasks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.StandardMetrics.accuracy">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#StandardMetrics.accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.StandardMetrics.accuracy" title="Link to this definition"></a></dt>
+<dd><p>Compute accuracy for classification tasks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.StandardMetrics.f1_score">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">f1_score</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">average</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'macro'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#StandardMetrics.f1_score"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.StandardMetrics.f1_score" title="Link to this definition"></a></dt>
+<dd><p>Compute F1 score.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.StandardMetrics.mean_absolute_error">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mean_absolute_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#StandardMetrics.mean_absolute_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.StandardMetrics.mean_absolute_error" title="Link to this definition"></a></dt>
+<dd><p>Compute mean absolute error for regression tasks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.StandardMetrics.mean_squared_error">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">mean_squared_error</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#StandardMetrics.mean_squared_error"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.StandardMetrics.mean_squared_error" title="Link to this definition"></a></dt>
+<dd><p>Compute mean squared error for regression tasks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.metrics.StandardMetrics.top_k_accuracy">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">top_k_accuracy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#StandardMetrics.top_k_accuracy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.StandardMetrics.top_k_accuracy" title="Link to this definition"></a></dt>
+<dd><p>Compute top-k accuracy.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.metrics.compute_metrics">
+<span class="sig-prename descclassname"><span class="pre">treadmill.metrics.</span></span><span class="sig-name descname"><span class="pre">compute_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">predictions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">targets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tensor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metric_fns</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/metrics.html#compute_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.metrics.compute_metrics" title="Link to this definition"></a></dt>
+<dd><p>Compute multiple metrics for given predictions and targets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>predictions</strong> – Model predictions</p></li>
+<li><p><strong>targets</strong> – Ground truth targets</p></li>
+<li><p><strong>metric_fns</strong> – Dictionary of metric name -&gt; metric function</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dictionary of computed metrics</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-treadmill.callbacks">Callback system for Treadmill training framework.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.callbacks.</span></span><span class="sig-name descname"><span class="pre">Callback</span></span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Base class for all callbacks.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback.on_batch_end">
+<span class="sig-name descname"><span class="pre">on_batch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_batch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback.on_batch_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of each batch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback.on_batch_start">
+<span class="sig-name descname"><span class="pre">on_batch_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_batch_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback.on_batch_start" title="Link to this definition"></a></dt>
+<dd><p>Called at the start of each batch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback.on_epoch_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of each epoch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback.on_epoch_start">
+<span class="sig-name descname"><span class="pre">on_epoch_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_epoch_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback.on_epoch_start" title="Link to this definition"></a></dt>
+<dd><p>Called at the start of each epoch.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback.on_train_end">
+<span class="sig-name descname"><span class="pre">on_train_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_train_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback.on_train_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback.on_train_start">
+<span class="sig-name descname"><span class="pre">on_train_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_train_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback.on_train_start" title="Link to this definition"></a></dt>
+<dd><p>Called at the start of training.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback.on_validation_end">
+<span class="sig-name descname"><span class="pre">on_validation_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_validation_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback.on_validation_end" title="Link to this definition"></a></dt>
+<dd><p>Called at the end of validation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.Callback.on_validation_start">
+<span class="sig-name descname"><span class="pre">on_validation_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#Callback.on_validation_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.Callback.on_validation_start" title="Link to this definition"></a></dt>
+<dd><p>Called at the start of validation.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.callbacks.EarlyStopping">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.callbacks.</span></span><span class="sig-name descname"><span class="pre">EarlyStopping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">monitor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'val_loss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">patience</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#EarlyStopping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.EarlyStopping" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<p>Early stopping callback to prevent overfitting.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.EarlyStopping.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#EarlyStopping.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.EarlyStopping.on_epoch_end" title="Link to this definition"></a></dt>
+<dd><p>Check for early stopping condition.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.EarlyStopping.on_train_end">
+<span class="sig-name descname"><span class="pre">on_train_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#EarlyStopping.on_train_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.EarlyStopping.on_train_end" title="Link to this definition"></a></dt>
+<dd><p>Print early stopping summary.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.callbacks.GradientClipping">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.callbacks.</span></span><span class="sig-name descname"><span class="pre">GradientClipping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">max_norm</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">norm_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#GradientClipping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.GradientClipping" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<p>Apply gradient clipping during training.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.GradientClipping.on_batch_end">
+<span class="sig-name descname"><span class="pre">on_batch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#GradientClipping.on_batch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.GradientClipping.on_batch_end" title="Link to this definition"></a></dt>
+<dd><p>Apply gradient clipping after backward pass.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.callbacks.LearningRateLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.callbacks.</span></span><span class="sig-name descname"><span class="pre">LearningRateLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#LearningRateLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.LearningRateLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<p>Log learning rate changes during training.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.LearningRateLogger.on_epoch_start">
+<span class="sig-name descname"><span class="pre">on_epoch_start</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#LearningRateLogger.on_epoch_start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.LearningRateLogger.on_epoch_start" title="Link to this definition"></a></dt>
+<dd><p>Log current learning rate.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.callbacks.MetricsLogger">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.callbacks.</span></span><span class="sig-name descname"><span class="pre">MetricsLogger</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#MetricsLogger"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.MetricsLogger" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<p>Log metrics to various destinations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.MetricsLogger.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#MetricsLogger.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.MetricsLogger.on_epoch_end" title="Link to this definition"></a></dt>
+<dd><p>Log epoch metrics.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.callbacks.ModelCheckpoint">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.callbacks.</span></span><span class="sig-name descname"><span class="pre">ModelCheckpoint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">filepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">monitor</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'val_loss'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'min'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_best_only</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_freq</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">save_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'pt'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#ModelCheckpoint"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.ModelCheckpoint" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#treadmill.callbacks.Callback" title="treadmill.callbacks.Callback"><code class="xref py py-class docutils literal notranslate"><span class="pre">Callback</span></code></a></p>
+<p>Save model checkpoints during training.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.callbacks.ModelCheckpoint.on_epoch_end">
+<span class="sig-name descname"><span class="pre">on_epoch_end</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">trainer</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/callbacks.html#ModelCheckpoint.on_epoch_end"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.callbacks.ModelCheckpoint.on_epoch_end" title="Link to this definition"></a></dt>
+<dd><p>Save checkpoint if conditions are met.</p>
+</dd></dl>
+
+</dd></dl>
+
+<p id="module-treadmill.utils">Utility functions for Treadmill framework.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="treadmill.utils.ProgressTracker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">treadmill.utils.</span></span><span class="sig-name descname"><span class="pre">ProgressTracker</span></span><a class="reference internal" href="_modules/treadmill/utils.html#ProgressTracker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.ProgressTracker" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Enhanced progress tracking with rich formatting.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.utils.ProgressTracker.finish_training">
+<span class="sig-name descname"><span class="pre">finish_training</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/utils.html#ProgressTracker.finish_training"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.ProgressTracker.finish_training" title="Link to this definition"></a></dt>
+<dd><p>Print training completion message.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.utils.ProgressTracker.print_batch_progress">
+<span class="sig-name descname"><span class="pre">print_batch_progress</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">batch_idx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_batches</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_every</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/utils.html#ProgressTracker.print_batch_progress"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.ProgressTracker.print_batch_progress" title="Link to this definition"></a></dt>
+<dd><p>Print batch progress.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.utils.ProgressTracker.print_epoch_header">
+<span class="sig-name descname"><span class="pre">print_epoch_header</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/utils.html#ProgressTracker.print_epoch_header"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.ProgressTracker.print_epoch_header" title="Link to this definition"></a></dt>
+<dd><p>Print nice epoch header.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.utils.ProgressTracker.print_epoch_summary">
+<span class="sig-name descname"><span class="pre">print_epoch_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">train_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">val_metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">has_early_stopping</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/utils.html#ProgressTracker.print_epoch_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.ProgressTracker.print_epoch_summary" title="Link to this definition"></a></dt>
+<dd><p>Print epoch summary in a nice table format.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.utils.ProgressTracker.start_epoch">
+<span class="sig-name descname"><span class="pre">start_epoch</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/utils.html#ProgressTracker.start_epoch"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.ProgressTracker.start_epoch" title="Link to this definition"></a></dt>
+<dd><p>Start epoch tracking.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="treadmill.utils.ProgressTracker.start_training">
+<span class="sig-name descname"><span class="pre">start_training</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_epochs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_batches_per_epoch</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/utils.html#ProgressTracker.start_training"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.ProgressTracker.start_training" title="Link to this definition"></a></dt>
+<dd><p>Initialize training progress tracking.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.utils.detect_terminal_theme">
+<span class="sig-prename descclassname"><span class="pre">treadmill.utils.</span></span><span class="sig-name descname"><span class="pre">detect_terminal_theme</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/treadmill/utils.html#detect_terminal_theme"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.detect_terminal_theme" title="Link to this definition"></a></dt>
+<dd><p>Detect if terminal has dark or light theme.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.utils.format_metrics">
+<span class="sig-prename descclassname"><span class="pre">treadmill.utils.</span></span><span class="sig-name descname"><span class="pre">format_metrics</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">metrics</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/treadmill/utils.html#format_metrics"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.format_metrics" title="Link to this definition"></a></dt>
+<dd><p>Format metrics dictionary for display.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.utils.format_number">
+<span class="sig-prename descclassname"><span class="pre">treadmill.utils.</span></span><span class="sig-name descname"><span class="pre">format_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">precision</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">4</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/treadmill/utils.html#format_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.format_number" title="Link to this definition"></a></dt>
+<dd><p>Format a number for display.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.utils.format_time">
+<span class="sig-prename descclassname"><span class="pre">treadmill.utils.</span></span><span class="sig-name descname"><span class="pre">format_time</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">seconds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/treadmill/utils.html#format_time"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.format_time" title="Link to this definition"></a></dt>
+<dd><p>Format time in seconds to human-readable format.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.utils.get_theme_colors">
+<span class="sig-prename descclassname"><span class="pre">treadmill.utils.</span></span><span class="sig-name descname"><span class="pre">get_theme_colors</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/utils.html#get_theme_colors"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.get_theme_colors" title="Link to this definition"></a></dt>
+<dd><p>Get colors based on terminal theme.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="treadmill.utils.print_model_summary">
+<span class="sig-prename descclassname"><span class="pre">treadmill.utils.</span></span><span class="sig-name descname"><span class="pre">print_model_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sample_input_shape</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">tuple</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/treadmill/utils.html#print_model_summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#treadmill.utils.print_model_summary" title="Link to this definition"></a></dt>
+<dd><p>Print a summary of the model.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="Treadmill Documentation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Treadmill Contributors.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
