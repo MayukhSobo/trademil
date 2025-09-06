@@ -578,8 +578,8 @@ Step 7: Advanced Training Configuration
         epochs=100,
         device="auto",
         mixed_precision=False,  # Can cause issues with attention
-        gradient_accumulation_steps=2,
-        max_grad_norm=1.0,
+        accumulate_grad_batches=2,
+        grad_clip_norm=1.0,
         
         validation_frequency=1,
         log_frequency=10,

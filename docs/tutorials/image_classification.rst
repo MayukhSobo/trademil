@@ -420,8 +420,8 @@ Advanced Training Setup
         
         # Performance optimizations
         mixed_precision=True,           # Faster training on modern GPUs
-        gradient_accumulation_steps=1,  # Simulate larger batch sizes
-        max_grad_norm=1.0,             # Gradient clipping
+        accumulate_grad_batches=1,  # Simulate larger batch sizes
+        grad_clip_norm=1.0,             # Gradient clipping
         
         # Validation and logging
         validation_frequency=1,         # Validate every epoch

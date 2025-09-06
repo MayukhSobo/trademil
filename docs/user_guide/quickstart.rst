@@ -97,8 +97,8 @@ The ``TrainingConfig`` class controls every aspect of training:
         
         # Performance optimizations
         mixed_precision=True,      # Use automatic mixed precision
-        gradient_accumulation_steps=1,  # Accumulate gradients
-        max_grad_norm=1.0,        # Gradient clipping
+        accumulate_grad_batches=1,  # Accumulate gradients
+        grad_clip_norm=1.0,        # Gradient clipping
         
         # Validation and monitoring
         validation_frequency=1,    # Validate every N epochs
@@ -276,8 +276,8 @@ High-Performance Training
         
         # Performance optimizations
         mixed_precision=True,
-        gradient_accumulation_steps=4,  # Simulate larger batch size
-        max_grad_norm=1.0,              # Prevent exploding gradients
+        accumulate_grad_batches=4,  # Simulate larger batch size
+        grad_clip_norm=1.0,              # Prevent exploding gradients
         
         # Efficient validation
         validation_frequency=5,          # Validate every 5 epochs

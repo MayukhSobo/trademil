@@ -375,8 +375,8 @@ Step 4: Advanced Training Configuration
         
         # Performance optimizations
         mixed_precision=True,
-        gradient_accumulation_steps=2,  # Effective batch size = 128 * 2 = 256
-        max_grad_norm=1.0,  # Gradient clipping
+        accumulate_grad_batches=2,  # Effective batch size = 128 * 2 = 256
+        grad_clip_norm=1.0,  # Gradient clipping
         
         # Validation and monitoring
         validation_frequency=1,
@@ -528,7 +528,7 @@ Step 8: Training with All Advanced Features
     print(f"  Optimizer: {config.optimizer.optimizer_class.__name__}")
     print(f"  Scheduler: {config.scheduler.scheduler_class.__name__}")
     print(f"  Mixed Precision: {config.mixed_precision}")
-    print(f"  Gradient Accumulation: {config.gradient_accumulation_steps}")
+    print(f"  Gradient Accumulation: {config.accumulate_grad_batches}")
     print(f"  Device: {trainer.device}")
     print(f"  Callbacks: {len(callbacks)}")
     print("-" * 80)
