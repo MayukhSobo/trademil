@@ -292,7 +292,7 @@ python advanced_training.py
 
 ## 🤝 Contributing
 
-We welcome contributions! Please see our contributing guidelines for more details.
+I welcome contributions! Please see our contributing guidelines for more details.
 
 ## 📄 License
 
