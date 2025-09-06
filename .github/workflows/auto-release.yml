@@ -1,0 +1,305 @@
+name: Auto Version Bump and Release
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+    branches: [ main ]
+  workflow_dispatch:  # Allow manual triggering
+    inputs:
+      version_type:
+        description: 'Version bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - patch
+        - minor
+        - major
+
+jobs:
+  auto-version-and-release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to push commits and create releases
+      actions: read    # Required to read workflow runs
+      id-token: write  # Required for GitHub CLI
+    if: |
+      (github.event_name == 'workflow_run' && github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main') ||
+      (github.event_name == 'workflow_dispatch')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        fetch-depth: 0  # Fetch full history for proper versioning
+        ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+    
+    - name: Configure git and sync with latest
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        
+        echo "🔄 Ensuring we have the absolute latest main branch..."
+        git fetch origin main
+        git reset --hard origin/main
+        
+        echo "📍 Current commit: $(git rev-parse HEAD)"
+        echo "📍 Latest commit: $(git rev-parse origin/main)"
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -e .
+        pip install bump2version
+    
+    - name: Get current version
+      id: current_version
+      run: |
+        VERSION=$(python -c "import treadmill; print(treadmill.__version__)")
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "tag=v$VERSION" >> $GITHUB_OUTPUT
+    
+    - name: Get latest commit message
+      id: commit_info
+      if: github.event_name == 'workflow_run'
+      run: |
+        COMMIT_MSG=$(git log -1 --pretty=format:%s)
+        echo "message=$COMMIT_MSG" >> $GITHUB_OUTPUT
+    
+    - name: Determine version bump type
+      id: bump_type
+      run: |
+        if [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+          echo "bump=${{ inputs.version_type }}" >> $GITHUB_OUTPUT
+          echo "🎯 Manual ${{ inputs.version_type }} version bump"
+        else
+          COMMIT_MSG="${{ steps.commit_info.outputs.message }}"
+          
+          if [[ $COMMIT_MSG == *"BREAKING CHANGE"* ]] || [[ $COMMIT_MSG == *"feat!"* ]]; then
+            echo "bump=major" >> $GITHUB_OUTPUT
+            echo "🚨 Major version bump (breaking changes detected)"
+          elif [[ $COMMIT_MSG == feat* ]] || [[ $COMMIT_MSG == *"feat("* ]]; then
+            echo "bump=minor" >> $GITHUB_OUTPUT  
+            echo "✨ Minor version bump (new features)"
+          elif [[ $COMMIT_MSG == fix* ]] || [[ $COMMIT_MSG == *"fix("* ]] || [[ $COMMIT_MSG == *"bug"* ]]; then
+            echo "bump=patch" >> $GITHUB_OUTPUT
+            echo "🐛 Patch version bump (bug fixes)"
+          else
+            echo "bump=patch" >> $GITHUB_OUTPUT
+            echo "🔧 Patch version bump (other changes)"
+          fi
+        fi
+    
+    - name: Create .bumpversion.cfg
+      run: |
+        cat > .bumpversion.cfg << EOF
+        [bumpversion]
+        current_version = ${{ steps.current_version.outputs.version }}
+        commit = False
+        tag = False
+        
+        [bumpversion:file:pyproject.toml]
+        search = version = "{current_version}"
+        replace = version = "{new_version}"
+        
+        [bumpversion:file:setup.py]
+        search = version="{current_version}"
+        replace = version="{new_version}"
+        
+        [bumpversion:file:treadmill/__init__.py]
+        search = __version__ = "{current_version}"
+        replace = __version__ = "{new_version}"
+        EOF
+    
+    - name: Bump version
+      run: |
+        bump2version ${{ steps.bump_type.outputs.bump }} --verbose --no-commit --no-tag
+    
+    - name: Commit version bump
+      run: |
+        git add pyproject.toml setup.py treadmill/__init__.py
+        git commit -m "chore: bump version to $(python -c "import treadmill; print(treadmill.__version__)")"
+    
+    - name: Get new version
+      id: get_version
+      run: |
+        NEW_VERSION=$(python -c "import treadmill; print(treadmill.__version__)")
+        echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
+        echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
+    
+    - name: Pull latest changes and push version bump
+      run: |
+        echo "🔄 Pulling latest changes before pushing..."
+        
+        # Try to pull and rebase, handling conflicts if they occur
+        if ! git pull --rebase origin main; then
+          echo "⚠️  Rebase conflicts detected. Attempting to resolve..."
+          
+          # If there are conflicts in version files, prefer our changes
+          if git status --porcelain | grep -E "(pyproject\.toml|setup\.py|treadmill/__init__\.py)"; then
+            echo "🔧 Resolving version file conflicts by keeping our version bump..."
+            git checkout --ours pyproject.toml setup.py treadmill/__init__.py
+            git add pyproject.toml setup.py treadmill/__init__.py
+            git rebase --continue
+          else
+            echo "❌ Unable to automatically resolve conflicts"
+            git rebase --abort
+            exit 1
+          fi
+        fi
+        
+        echo "🚀 Pushing version bump..."
+        git push origin main
+    
+    - name: Check if release exists
+      id: check_release
+      run: |
+        if git rev-parse "v${{ steps.get_version.outputs.version }}" >/dev/null 2>&1; then
+          echo "exists=true" >> $GITHUB_OUTPUT
+        else
+          echo "exists=false" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Get latest commits since last release
+      id: get_commits
+      if: steps.check_release.outputs.exists == 'false'
+      run: |
+        # Get the last release tag
+        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        
+        if [ -z "$LAST_TAG" ]; then
+          # No previous tags, get all commits
+          COMMITS=$(git log --pretty=format:"- %s" --no-merges)
+        else
+          # Get commits since last tag
+          COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s" --no-merges)
+        fi
+        
+        # Generate release notes
+        cat << EOF > release_notes.md
+        # 🏃‍♀️‍➡️ Treadmill v${{ steps.get_version.outputs.version }}
+        
+        ## ✨ What's New
+        
+        **Version bump:** ${{ steps.current_version.outputs.version }} → ${{ steps.get_version.outputs.version }} (${{ steps.bump_type.outputs.bump }})
+        
+        **Latest commit:** ${{ steps.commit_info.outputs.message || 'Manual release' }}
+        
+        ### Recent Changes
+        $COMMITS
+        
+        ## 🚀 Features
+        
+        This release of Treadmill includes:
+        - 🎯 **Pure PyTorch** - Built specifically for PyTorch, no forced abstractions
+        - 🔧 **Modular Design** - Easy to customize and extend with callback system  
+        - 📊 **Beautiful Output** - Rich formatting with progress bars and metrics tables
+        - ⚡ **Performance Optimizations** - Mixed precision, gradient accumulation, gradient clipping
+        - 🎛️ **Flexible Configuration** - Dataclass-based configuration system
+        - 📈 **Comprehensive Metrics** - Built-in metrics with support for custom metrics
+        - 💾 **Smart Checkpointing** - Automatic model saving with customizable triggers
+        - 🛑 **Early Stopping** - Configurable early stopping to prevent overfitting
+        - 🔄 **Resumable Training** - Easy checkpoint loading and training resumption
+        
+        ## 📦 Installation
+        
+        \`\`\`bash
+        pip install treadmill==${{ steps.get_version.outputs.version }}
+        \`\`\`
+        
+        **With optional dependencies:**
+        \`\`\`bash
+        pip install "treadmill[examples]==${{ steps.get_version.outputs.version }}"  # Examples
+        pip install "treadmill[full]==${{ steps.get_version.outputs.version }}"     # Full features
+        pip install "treadmill[dev]==${{ steps.get_version.outputs.version }}"      # Development
+        \`\`\`
+        
+        ## 🔗 Links
+        
+        - 📖 [Documentation](https://mayukhsobo.github.io/treadmill/)  
+        - 🐛 [Issues](https://github.com/MayukhSobo/treadmill/issues)
+        - 💬 [Discussions](https://github.com/MayukhSobo/treadmill/discussions)
+        - 📚 [Examples](https://github.com/MayukhSobo/treadmill/tree/main/examples)
+        
+        ---
+        
+        **Full Changelog**: https://github.com/MayukhSobo/treadmill/compare/${LAST_TAG}...v${{ steps.get_version.outputs.version }}
+        EOF
+    
+    - name: Create and Publish Release
+      if: steps.check_release.outputs.exists == 'false'
+      run: |
+        echo "Creating release ${{ steps.get_version.outputs.tag }}..."
+        
+        # Create release as draft first
+        gh release create ${{ steps.get_version.outputs.tag }} \
+          --title "🏃‍♀️‍➡️ Treadmill ${{ steps.get_version.outputs.tag }}" \
+          --notes-file release_notes.md \
+          --draft \
+          --verify-tag=false
+        
+        echo "📝 Draft release created, now publishing..."
+        
+        # Explicitly publish the release to trigger webhook
+        gh release edit ${{ steps.get_version.outputs.tag }} \
+          --draft=false \
+          --latest
+        
+        echo "✅ Release published successfully!"
+        echo "🔍 Verifying release status..."
+        gh release view ${{ steps.get_version.outputs.tag }} --json tagName,isDraft,publishedAt
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Wait and verify webhook trigger
+      if: steps.check_release.outputs.exists == 'false'
+      run: |
+        echo "⏳ Waiting 15 seconds for release webhook to be processed by GitHub..."
+        sleep 15
+        
+        echo "🔍 Final release verification..."
+        RELEASE_INFO=$(gh release view ${{ steps.get_version.outputs.tag }} --json isDraft,publishedAt,url)
+        echo "Release info: $RELEASE_INFO"
+        
+        # Check if the release was properly published
+        IS_DRAFT=$(echo "$RELEASE_INFO" | jq -r '.isDraft')
+        PUBLISHED_AT=$(echo "$RELEASE_INFO" | jq -r '.publishedAt')
+        
+        if [ "$IS_DRAFT" = "false" ] && [ "$PUBLISHED_AT" != "null" ]; then
+          echo "✅ Release properly published at: $PUBLISHED_AT"
+          echo "🚀 This should trigger the 'Publish to PyPI' workflow"
+        else
+          echo "⚠️  Release may not be properly published:"
+          echo "  - isDraft: $IS_DRAFT"
+          echo "  - publishedAt: $PUBLISHED_AT"
+        fi
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    
+    - name: Release Summary
+      if: steps.check_release.outputs.exists == 'false'
+      run: |
+        echo "🎉 Created and published release ${{ steps.get_version.outputs.tag }}"
+        echo "🔄 This should now trigger the 'Publish to PyPI' workflow"
+        echo "📦 PyPI publish will happen automatically via the publish workflow"
+        echo "🚀 Once published, users can install with: pip install treadmill==${{ steps.get_version.outputs.version }}"
+        echo ""
+        echo "📋 Workflow Chain Status:"
+        echo "  ✅ 1. CI tests passed (triggered this workflow)"
+        echo "  ✅ 2. Auto-release completed (this step)"
+        echo "  🔄 3. PyPI publish workflow should trigger next..."
+    
+    - name: Skip Release (Already Exists)
+      if: steps.check_release.outputs.exists == 'true'
+      run: |
+        echo "ℹ️ Release ${{ steps.get_version.outputs.tag }} already exists"
+        echo "💡 Update version in pyproject.toml, setup.py and treadmill/__init__.py to create new release" 
