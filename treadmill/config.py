@@ -139,7 +139,6 @@ class TrainingConfig:
         if not self.project_name:
             # Try to infer project name from parent directory or use default
             try:
-                import os
                 current_dir = os.getcwd()
                 parent_dir = os.path.basename(current_dir)
                 # Use parent directory name if it's not a generic name
