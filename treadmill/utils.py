@@ -3,6 +3,9 @@ Utility functions for Treadmill framework.
 """
 
 import time
+import os
+import subprocess
+from datetime import datetime
 from typing import Dict, Any, Optional
 from rich.console import Console
 from rich.table import Table
@@ -14,22 +17,126 @@ from rich import box
 console = Console()
 
 
+def create_experiment_dir(base_dir: str = "./checkpoints") -> str:
+    """
+    Create a unique experiment directory with format:
+    [PROJECT_NAME]-experiment-[date]-[time]-[TIMEZONE]
+    
+    Args:
+        base_dir: Base directory where experiment folders will be created
+        
+    Returns:
+        str: Path to the created experiment directory
+        
+    Example:
+        "trademil-experiment-25-12-2024-2:30pm-UTC"
+    """
+    # Try to get project name from different sources
+    project_name = _get_project_name()
+    
+    # Get current datetime with timezone
+    now = datetime.now()
+    
+    # Format date as DD-MM-YYYY
+    date_str = now.strftime("%d-%m-%Y")
+    
+    # Format time as 1:45:30pm (12-hour with seconds and am/pm)
+    time_str = now.strftime("%I:%M:%S%p").lower()
+    
+    # Get timezone (simplified)
+    try:
+        import time
+        timezone = time.tzname[time.daylight] if time.daylight else time.tzname[0]
+        # Fallback to UTC if timezone is empty/None
+        if not timezone:
+            timezone = "UTC"
+    except:
+        timezone = "UTC"
+    
+    # Create experiment directory name
+    experiment_name = f"{project_name}-experiment-{date_str}-{time_str}-{timezone}"
+    experiment_path = os.path.join(base_dir, experiment_name)
+    
+    # Create the directory
+    os.makedirs(experiment_path, exist_ok=True)
+    
+    return experiment_path
+
+
+def _get_project_name() -> str:
+    """
+    Try to detect project name from various sources.
+    
+    Returns:
+        str: Project name or 'treadmill' as default
+    """
+    # Try 1: Git repository name
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--show-toplevel"], 
+            capture_output=True, 
+            text=True, 
+            timeout=5
+        )
+        if result.returncode == 0:
+            git_root = result.stdout.strip()
+            project_name = os.path.basename(git_root)
+            if project_name and project_name != ".":
+                return project_name.lower().replace(" ", "-")
+    except:
+        pass
+    
+    # Try 2: Current working directory name
+    try:
+        cwd = os.getcwd()
+        dir_name = os.path.basename(cwd)
+        if dir_name and dir_name != ".":
+            return dir_name.lower().replace(" ", "-")
+    except:
+        pass
+    
+    # Try 3: Check for common project files (pyproject.toml, setup.py, package.json)
+    try:
+        if os.path.exists("pyproject.toml"):
+            # Try to parse project name from pyproject.toml
+            with open("pyproject.toml", "r") as f:
+                content = f.read()
+                import re
+                match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', content)
+                if match:
+                    return match.group(1).lower().replace(" ", "-")
+        
+        if os.path.exists("setup.py"):
+            # Try to parse project name from setup.py
+            with open("setup.py", "r") as f:
+                content = f.read()
+                import re
+                match = re.search(r'name\s*=\s*["\']([^"\']+)["\']', content)
+                if match:
+                    return match.group(1).lower().replace(" ", "-")
+    except:
+        pass
+    
+    # Default fallback
+    return "treadmill"
+
+
 def get_universal_colors():
     """
-    Universal colors that work well across all environments and backgrounds.
-    These colors provide good contrast on both light and dark backgrounds.
+    Universal colors using hex codes that work well across all environments and backgrounds.
+    These hex colors provide consistent appearance and good contrast on both light and dark backgrounds.
     """
     return {
-        'header': 'bold blue',           # Blue works well on both backgrounds
-        'epoch': 'bold magenta',         # Magenta has good contrast everywhere
-        'train': 'green',                # Green for training (positive action)
-        'val': 'blue',                   # Blue for validation
-        'metric': 'default',             # Default terminal color (adapts automatically)
-        'improvement': 'green',          # Green for improvements
-        'regression': 'red',             # Red for regressions
-        'warning': 'yellow',             # Yellow for warnings
-        'success': 'green',              # Green for success
-        'info': 'cyan'                   # Cyan for info
+        'header': '#0066FF',           # Professional blue - great contrast everywhere
+        'epoch': '#9933CC',            # Purple/magenta - excellent visibility 
+        'train': '#228B22',            # Forest green - clear positive indicator
+        'val': '#1E90FF',              # Dodger blue - distinct from train
+        'metric': 'default',           # Default terminal color (adapts automatically)
+        'improvement': '#228B22',      # Same green as train - consistency
+        'regression': '#DC143C',       # Crimson red - clear negative indicator
+        'warning': '#FF8C00',          # Dark orange - visible warning color
+        'success': '#228B22',          # Same green - success indicator
+        'info': '#20B2AA'              # Light sea green - info color
     }
 
 
@@ -113,13 +220,23 @@ class ProgressTracker:
         
     def print_batch_progress(self, batch_idx: int, total_batches: int, 
                            metrics: Dict[str, float], print_every: int = 10):
-        """Print batch progress."""
+        """Print batch progress with line overwriting."""
         if (batch_idx + 1) % print_every == 0 or batch_idx == total_batches - 1:
             progress = (batch_idx + 1) / total_batches * 100
             metrics_str = " | ".join([f"{k}: {v:.4f}" for k, v in metrics.items()])
             
-            console.print(f"[{COLORS['train']}]Batch {batch_idx+1:4d}/{total_batches} "
-                         f"({progress:5.1f}%)[/{COLORS['train']}] | {metrics_str}")
+            # Use sys.stdout for direct control over output
+            import sys
+            progress_line = f"Batch {batch_idx+1:4d}/{total_batches} ({progress:5.1f}%) | {metrics_str}"
+            
+            # Clear the entire line first, then write new content
+            sys.stdout.write("\r" + " " * 80 + "\r")  # Clear line
+            sys.stdout.write(progress_line)
+            
+            if batch_idx == total_batches - 1:
+                sys.stdout.write("\n")  # Add newline only for last batch
+                
+            sys.stdout.flush()
     
     def print_epoch_summary(self, epoch: int, train_metrics: Dict[str, float], 
                           val_metrics: Optional[Dict[str, float]] = None,
@@ -186,13 +303,13 @@ class ProgressTracker:
             table.add_row("", "")
         
         # Add timing information
-        table.add_row("[bold]Epoch Time[/bold]", 
-                     f"[dim]{format_time(epoch_time)}[/dim]", 
-                     f"[dim]{format_time(epoch_time)}[/dim]" if val_metrics else None,
+        table.add_row(f"[bold {COLORS['info']}]Epoch Time[/bold {COLORS['info']}]", 
+                     f"[{COLORS['info']}]{format_time(epoch_time)}[/{COLORS['info']}]", 
+                     f"[{COLORS['info']}]{format_time(epoch_time)}[/{COLORS['info']}]" if val_metrics else None,
                      "" if val_metrics else None)
-        table.add_row("[bold]Total Time[/bold]", 
-                     f"[dim]{format_time(total_time)}[/dim]",
-                     f"[dim]{format_time(total_time)}[/dim]" if val_metrics else None,
+        table.add_row(f"[bold {COLORS['info']}]Total Time[/bold {COLORS['info']}]", 
+                     f"[{COLORS['info']}]{format_time(total_time)}[/{COLORS['info']}]",
+                     f"[{COLORS['info']}]{format_time(total_time)}[/{COLORS['info']}]" if val_metrics else None,
                      "" if val_metrics else None)
         
         console.print(table)

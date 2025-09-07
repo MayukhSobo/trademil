@@ -11,7 +11,7 @@ import os
 
 from .config import TrainingConfig
 from .metrics import MetricsTracker, compute_metrics
-from .utils import ProgressTracker, print_model_summary
+from .utils import ProgressTracker, print_model_summary, create_experiment_dir
 from .callbacks import Callback, EarlyStopping, ModelCheckpoint
 
 
@@ -103,19 +103,26 @@ class Trainer:
         
         # Add default model checkpointing if configured
         if self.config.save_best_model:
-            os.makedirs(self.config.checkpoint_dir, exist_ok=True)
+            # Create unique experiment directory for this training run
+            experiment_dir = create_experiment_dir(self.config.checkpoint_dir)
+            
+            # Store the experiment directory for potential later use
+            self.experiment_dir = experiment_dir
+            
+            # Inform user about the experiment directory
+            print(f"🔄 Experiment directory created: {experiment_dir}")
             
             # Choose monitor metric based on whether validation data is available
             if self.val_dataloader:
                 monitor_metric = "val_loss"
                 checkpoint_path = os.path.join(
-                    self.config.checkpoint_dir, 
+                    experiment_dir, 
                     "best_model_epoch_{epoch:03d}_{val_loss:.4f}.pt"
                 )
             else:
                 monitor_metric = "loss"
                 checkpoint_path = os.path.join(
-                    self.config.checkpoint_dir, 
+                    experiment_dir, 
                     "best_model_epoch_{epoch:03d}_{loss:.4f}.pt"
                 )
             
@@ -405,6 +412,10 @@ class Trainer:
     
     def save_checkpoint(self, filepath: str, additional_info: Optional[Dict] = None):
         """Save a training checkpoint."""
+        # If experiment directory exists and filepath is just a filename, save to experiment directory
+        if hasattr(self, 'experiment_dir') and os.path.dirname(filepath) == "":
+            filepath = os.path.join(self.experiment_dir, filepath)
+        
         checkpoint = {
             "epoch": self.current_epoch,
             "model_state_dict": self.model.state_dict(),
@@ -418,6 +429,9 @@ class Trainer:
         
         if additional_info:
             checkpoint.update(additional_info)
+        
+        # Ensure directory exists
+        os.makedirs(os.path.dirname(filepath), exist_ok=True)
         
         torch.save(checkpoint, filepath)
         print(f"Checkpoint saved to {filepath}")
