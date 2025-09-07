@@ -200,11 +200,15 @@ class ProgressTracker:
         self.start_time = None
         self.epoch_start_time = None
         self.live_display = None
+        self.current_batch = 0
+        # Store previous epoch metrics for change calculation
+        self.prev_epoch_metrics = None
+        # Rich Live display components
         self.progress = None
         self.task_id = None
         self.title = None
         self.metrics_text = None
-        
+    
     def start_training(self, total_epochs: int, total_batches_per_epoch: int):
         """Initialize training progress tracking."""
         self.start_time = time.time()
@@ -216,51 +220,58 @@ class ProgressTracker:
         console.print(f"\n{header_line}", justify="center")
         console.print(f"[bold {COLORS['header']}]🚀 Starting Training with Treadmill[/bold {COLORS['header']}]", justify="center")
         console.print(header_line, justify="center")
-        
-    def start_epoch(self, epoch: int, total_batches: int, total_epochs: int = None):
-        """Start epoch tracking with Rich Live display."""
+    
+    def start_epoch(self, epoch: int, total_batches: int, total_epochs: int = None, progress_bar: bool = True):
+        """Start epoch tracking with Rich Live display or simple mode."""
         self.epoch_start_time = time.time()
         self.current_epoch = epoch
         
-        # Setup Rich Live display components with Epoch X/Y format
-        if total_epochs:
-            epoch_title = f"\nEpoch {epoch + 1}/{total_epochs}"
+        if progress_bar:
+            # Setup Rich Live display components with Epoch X/Y format
+            if total_epochs:
+                epoch_title = f"\nEpoch {epoch + 1}/{total_epochs}"
+            else:
+                epoch_title = f"\nEpoch {epoch + 1}"
+            self.title = Text(epoch_title, justify="left", style=f"bold {COLORS['epoch']}")
+            self.metrics_text = Text("", justify="left", style=COLORS['info'])
+            self.progress = Progress(
+                BarColumn(),
+                "[progress.percentage]{task.percentage:>3.1f}%",
+                TimeElapsedColumn(),
+            )
+            
+            # Create the layout group
+            layout = Group(
+                self.title,
+                self.progress,
+                self.metrics_text,
+            )
+            
+            # Add task to progress bar
+            self.task_id = self.progress.add_task("", total=total_batches)
+            
+            # Initialize Live display
+            self.live_display = Live(layout, refresh_per_second=10)
+            self.live_display.start()
         else:
-            epoch_title = f"\nEpoch {epoch + 1}"
-        self.title = Text(epoch_title, justify="left", style="bold red")
-        self.metrics_text = Text("", justify="left", style="cyan")
-        self.progress = Progress(
-            BarColumn(),
-            "[progress.percentage]{task.percentage:>3.1f}%",
-            TimeElapsedColumn(),
-        )
-        
-        # Create the layout group
-        layout = Group(
-            self.title,
-            self.progress,
-            self.metrics_text,
-        )
-        
-        # Add task to progress bar
-        self.task_id = self.progress.add_task("", total=total_batches)
-        
-        # Initialize Live display
-        self.live_display = Live(layout, refresh_per_second=10)
-        self.live_display.start()
-        
+            # Simple mode - no Rich Live display
+            self.live_display = None
+            self.progress = None
+            self.task_id = None
+    
     def print_epoch_header(self, epoch: int, total_epochs: int):
-        """Print nice epoch header."""
+        """Print nice epoch header when Rich Live display is not used."""
         console.print(f"\n[bold {COLORS['epoch']}]Epoch {epoch+1}/{total_epochs}[/bold {COLORS['epoch']}]")
         console.print("-" * 40)
-        
+    
     def print_batch_progress(self, batch_idx: int, total_batches: int, 
                            metrics: Dict[str, float], print_every: int = 10):
-        """Update batch progress using Rich Live display."""
+        """Update batch progress using Rich Live display or simple print."""
         if self.live_display and self.progress and self.task_id is not None:
+            # Rich Live display mode
             # Format metrics string (configurable based on provided metrics)
             if metrics:
-                metrics_str = " | ".join([f"{k}: {v:.4f}" for k, v in metrics.items()])
+                metrics_str = " | ".join([f"{k.replace('train_', '')}: {format_number(v)}" for k, v in metrics.items()])
                 self.metrics_text.plain = metrics_str
             
             # Update progress bar
@@ -270,7 +281,20 @@ class ProgressTracker:
                 advance_amount = current_completed - self.progress.tasks[self.task_id].completed
                 if advance_amount > 0:
                     self.progress.update(self.task_id, advance=advance_amount)
-    
+        else:
+            # Simple print mode (when progress_bar is disabled)
+            if (batch_idx + 1) % print_every == 0 or batch_idx == total_batches - 1:
+                progress_pct = (batch_idx + 1) / total_batches * 100
+                
+                # Format metrics for display
+                metric_strs = []
+                for key, value in metrics.items():
+                    clean_key = key.replace("train_", "")
+                    metric_strs.append(f"{clean_key}: {format_number(value)}")
+                
+                progress_text = f"Batch {batch_idx + 1}/{total_batches} ({progress_pct:.1f}%) | " + " | ".join(metric_strs)
+                console.print(f"  {progress_text}")
+
     def end_epoch_display(self):
         """Stop the Live display at the end of epoch."""
         if self.live_display:
@@ -299,59 +323,112 @@ class ProgressTracker:
         if val_metrics:
             table.add_column("Validation", style=COLORS['val'], justify="right")
             table.add_column("Change", style=COLORS['improvement'], justify="right")
+        else:
+            table.add_column("Change", style=COLORS['improvement'], justify="right")
         
         # Add metrics to table
         all_metrics = set(train_metrics.keys())
         if val_metrics:
             all_metrics.update(val_metrics.keys())
+        
+        # Determine which metrics to use for change calculation
+        # If validation data is available, use validation metrics; otherwise use training metrics
+        current_metrics_for_change = val_metrics if val_metrics else train_metrics
             
         for metric in sorted(all_metrics):
             train_val = format_number(train_metrics.get(metric, 0.0))
             if val_metrics:
                 val_val = format_number(val_metrics.get(metric, 0.0))
                 
-                # Calculate change (improvement indicator with percentage)
-                train_num = train_metrics.get(metric, 0.0)
-                val_num = val_metrics.get(metric, 0.0)
+                # Calculate change from previous epoch
+                change_text = "N/A"
+                if self.prev_epoch_metrics is not None:
+                    # Use validation metrics for change calculation since they exist
+                    prev_val = self.prev_epoch_metrics.get(metric, 0.0) if val_metrics else self.prev_epoch_metrics.get(metric, 0.0)
+                    current_val = val_metrics.get(metric, 0.0)
+                    
+                    if prev_val != 0:
+                        pct_change = ((current_val - prev_val) / abs(prev_val)) * 100
+                    else:
+                        pct_change = 0
+                    
+                    # Determine if lower is better for this metric
+                    lower_is_better_metrics = ["loss", "error", "mae", "mse", "rmse", "mape", "perplexity"]
+                    metric_lower = metric.lower()
+                    is_lower_better = any(keyword in metric_lower for keyword in lower_is_better_metrics)
+                    
+                    if is_lower_better:
+                        # For metrics where lower is better (loss, error, etc.)
+                        is_improvement = current_val < prev_val
+                        arrow = "↓" if is_improvement else "↑"
+                    else:
+                        # For metrics where higher is better (accuracy, precision, recall, f1, etc.)
+                        is_improvement = current_val > prev_val
+                        arrow = "↑" if is_improvement else "↓"
+                    
+                    change_color = COLORS['improvement'] if is_improvement else COLORS['regression']
+                    change_text = f"[{change_color}]{arrow} {abs(pct_change):.1f}%[/{change_color}]"
                 
-                # Calculate percentage change
-                if train_num != 0:
-                    pct_change = ((val_num - train_num) / abs(train_num)) * 100
-                else:
-                    pct_change = 0
-                
-                if "loss" in metric.lower():
-                    # For loss, lower is better
-                    is_improvement = val_num < train_num
-                    arrow = "↓" if is_improvement else "↑"
-                else:
-                    # For other metrics, higher is usually better
-                    is_improvement = val_num > train_num
-                    arrow = "↑" if is_improvement else "↓"
-                
-                change_color = COLORS['improvement'] if is_improvement else COLORS['regression']
-                change_text = f"[{change_color}]{arrow} {abs(pct_change):.1f}%[/{change_color}]"
                 table.add_row(metric.capitalize(), train_val, val_val, change_text)
             else:
-                table.add_row(metric.capitalize(), train_val)
+                # No validation metrics - show change for training metrics
+                change_text = "N/A"
+                if self.prev_epoch_metrics is not None:
+                    prev_val = self.prev_epoch_metrics.get(metric, 0.0)
+                    current_val = train_metrics.get(metric, 0.0)
+                    
+                    if prev_val != 0:
+                        pct_change = ((current_val - prev_val) / abs(prev_val)) * 100
+                    else:
+                        pct_change = 0
+                    
+                    # Determine if lower is better for this metric
+                    lower_is_better_metrics = ["loss", "error", "mae", "mse", "rmse", "mape", "perplexity"]
+                    metric_lower = metric.lower()
+                    is_lower_better = any(keyword in metric_lower for keyword in lower_is_better_metrics)
+                    
+                    if is_lower_better:
+                        # For metrics where lower is better (loss, error, etc.)
+                        is_improvement = current_val < prev_val
+                        arrow = "↓" if is_improvement else "↑"
+                    else:
+                        # For metrics where higher is better (accuracy, precision, recall, f1, etc.)
+                        is_improvement = current_val > prev_val
+                        arrow = "↑" if is_improvement else "↓"
+                    
+                    change_color = COLORS['improvement'] if is_improvement else COLORS['regression']
+                    change_text = f"[{change_color}]{arrow} {abs(pct_change):.1f}%[/{change_color}]"
+                
+                table.add_row(metric.capitalize(), train_val, change_text)
         
         # Add separator
         if val_metrics:
             table.add_row("", "", "", "")
         else:
-            table.add_row("", "")
+            table.add_row("", "", "")
         
         # Add timing information
-        table.add_row(f"[bold {COLORS['info']}]Epoch Time[/bold {COLORS['info']}]", 
-                     f"[{COLORS['info']}]{format_time(epoch_time)}[/{COLORS['info']}]", 
-                     f"[{COLORS['info']}]{format_time(epoch_time)}[/{COLORS['info']}]" if val_metrics else None,
-                     "" if val_metrics else None)
-        table.add_row(f"[bold {COLORS['info']}]Total Time[/bold {COLORS['info']}]", 
-                     f"[{COLORS['info']}]{format_time(total_time)}[/{COLORS['info']}]",
-                     f"[{COLORS['info']}]{format_time(total_time)}[/{COLORS['info']}]" if val_metrics else None,
-                     "" if val_metrics else None)
+        if val_metrics:
+            table.add_row(f"[bold {COLORS['info']}]Epoch Time[/bold {COLORS['info']}]", 
+                         f"[{COLORS['info']}]{format_time(epoch_time)}[/{COLORS['info']}]", 
+                         f"[{COLORS['info']}]{format_time(epoch_time)}[/{COLORS['info']}]",
+                         "")
+            table.add_row(f"[bold {COLORS['info']}]Total Time[/bold {COLORS['info']}]", 
+                         f"[{COLORS['info']}]{format_time(total_time)}[/{COLORS['info']}]",
+                         f"[{COLORS['info']}]{format_time(total_time)}[/{COLORS['info']}]",
+                         "")
+        else:
+            table.add_row(f"[bold {COLORS['info']}]Epoch Time[/bold {COLORS['info']}]", 
+                         f"[{COLORS['info']}]{format_time(epoch_time)}[/{COLORS['info']}]",
+                         "")
+            table.add_row(f"[bold {COLORS['info']}]Total Time[/bold {COLORS['info']}]", 
+                         f"[{COLORS['info']}]{format_time(total_time)}[/{COLORS['info']}]",
+                         "")
         
         console.print(table)
+        
+        # Store current epoch metrics for next epoch's change calculation
+        self.prev_epoch_metrics = current_metrics_for_change.copy()
         
         # Check for overfitting if early stopping is not active
         if (config and val_metrics and not has_early_stopping and 

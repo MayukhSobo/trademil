@@ -166,7 +166,7 @@ class Trainer:
                     break
                     
                 self.current_epoch = epoch
-                self.progress_tracker.start_epoch(epoch, len(self.train_dataloader), self.config.epochs)
+                self.progress_tracker.start_epoch(epoch, len(self.train_dataloader), self.config.epochs, self.config.progress_bar)
                 # Only print epoch header if Rich Live display is not being used
                 if not self.config.progress_bar:
                     self.progress_tracker.print_epoch_header(epoch, self.config.epochs)
