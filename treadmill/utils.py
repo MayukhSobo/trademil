@@ -9,9 +9,13 @@ from datetime import datetime
 from typing import Dict, Any, Optional
 from rich.console import Console
 from rich.table import Table
-from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn
+from rich.progress import Progress, BarColumn, TextColumn, TimeRemainingColumn, TimeElapsedColumn
 from rich.panel import Panel
 from rich import box
+from rich.live import Live
+from rich.text import Text
+from rich.console import Group
+from rich.align import Align
 
 
 console = Console()
@@ -195,6 +199,11 @@ class ProgressTracker:
     def __init__(self):
         self.start_time = None
         self.epoch_start_time = None
+        self.live_display = None
+        self.progress = None
+        self.task_id = None
+        self.title = None
+        self.metrics_text = None
         
     def start_training(self, total_epochs: int, total_batches_per_epoch: int):
         """Initialize training progress tracking."""
@@ -208,10 +217,37 @@ class ProgressTracker:
         console.print(f"[bold {COLORS['header']}]🚀 Starting Training with Treadmill[/bold {COLORS['header']}]", justify="center")
         console.print(header_line, justify="center")
         
-    def start_epoch(self, epoch: int):
-        """Start epoch tracking."""
+    def start_epoch(self, epoch: int, total_batches: int, total_epochs: int = None):
+        """Start epoch tracking with Rich Live display."""
         self.epoch_start_time = time.time()
         self.current_epoch = epoch
+        
+        # Setup Rich Live display components with Epoch X/Y format
+        if total_epochs:
+            epoch_title = f"\nEpoch {epoch + 1}/{total_epochs}"
+        else:
+            epoch_title = f"\nEpoch {epoch + 1}"
+        self.title = Text(epoch_title, justify="left", style="bold red")
+        self.metrics_text = Text("", justify="left", style="cyan")
+        self.progress = Progress(
+            BarColumn(),
+            "[progress.percentage]{task.percentage:>3.1f}%",
+            TimeElapsedColumn(),
+        )
+        
+        # Create the layout group
+        layout = Group(
+            self.title,
+            self.progress,
+            self.metrics_text,
+        )
+        
+        # Add task to progress bar
+        self.task_id = self.progress.add_task("", total=total_batches)
+        
+        # Initialize Live display
+        self.live_display = Live(layout, refresh_per_second=10)
+        self.live_display.start()
         
     def print_epoch_header(self, epoch: int, total_epochs: int):
         """Print nice epoch header."""
@@ -220,23 +256,26 @@ class ProgressTracker:
         
     def print_batch_progress(self, batch_idx: int, total_batches: int, 
                            metrics: Dict[str, float], print_every: int = 10):
-        """Print batch progress with line overwriting."""
-        if (batch_idx + 1) % print_every == 0 or batch_idx == total_batches - 1:
-            progress = (batch_idx + 1) / total_batches * 100
-            metrics_str = " | ".join([f"{k}: {v:.4f}" for k, v in metrics.items()])
+        """Update batch progress using Rich Live display."""
+        if self.live_display and self.progress and self.task_id is not None:
+            # Format metrics string (configurable based on provided metrics)
+            if metrics:
+                metrics_str = " | ".join([f"{k}: {v:.4f}" for k, v in metrics.items()])
+                self.metrics_text.plain = metrics_str
             
-            # Use sys.stdout for direct control over output
-            import sys
-            progress_line = f"Batch {batch_idx+1:4d}/{total_batches} ({progress:5.1f}%) | {metrics_str}"
-            
-            # Clear the entire line first, then write new content
-            sys.stdout.write("\r" + " " * 80 + "\r")  # Clear line
-            sys.stdout.write(progress_line)
-            
-            if batch_idx == total_batches - 1:
-                sys.stdout.write("\n")  # Add newline only for last batch
-                
-            sys.stdout.flush()
+            # Update progress bar
+            # Calculate how much to advance (since we may not update every batch)
+            if (batch_idx + 1) % print_every == 0 or batch_idx == total_batches - 1:
+                current_completed = batch_idx + 1
+                advance_amount = current_completed - self.progress.tasks[self.task_id].completed
+                if advance_amount > 0:
+                    self.progress.update(self.task_id, advance=advance_amount)
+    
+    def end_epoch_display(self):
+        """Stop the Live display at the end of epoch."""
+        if self.live_display:
+            self.live_display.stop()
+            self.live_display = None
     
     def print_epoch_summary(self, epoch: int, train_metrics: Dict[str, float], 
                           val_metrics: Optional[Dict[str, float]] = None,
