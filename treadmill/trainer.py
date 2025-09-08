@@ -64,6 +64,7 @@ class Trainer:
         self.progress_tracker = ProgressTracker()
         self.current_epoch = 0
         self.stop_training = False
+        self._history = None  # Store training history for later access
         
         # Mixed precision setup
         self.scaler = None
@@ -227,12 +228,16 @@ class Trainer:
             self.progress_tracker.finish_training()
         
         # Return training history
-        return {
+        history = {
             "train_metrics": self.metrics_tracker.get_epoch_metrics("train"),
             "val_metrics": self.metrics_tracker.get_epoch_metrics("val"),
             "best_metrics": self.metrics_tracker.get_best_metrics("val"),
             "total_epochs": self.current_epoch + 1
         }
+        
+        # Store history for later access via .history property
+        self._history = history
+        return history
     
     def fit(self) -> Dict[str, Any]:
         """
@@ -245,6 +250,27 @@ class Trainer:
             Dictionary containing training history and final metrics
         """
         return self.train()
+    
+    @property
+    def history(self) -> Optional[Dict[str, Any]]:
+        """
+        Access training history after training has completed.
+        
+        This property allows access to training results even if the return value
+        from train() or fit() was not stored in a variable.
+        
+        Returns:
+            Dictionary containing training history and final metrics, or None if training hasn't run yet
+            
+        Example:
+            trainer = Trainer(...)
+            trainer.fit()  # Don't store the result
+            
+            # Access history later
+            print(f"Total epochs: {trainer.history['total_epochs']}")
+            print(f"Best accuracy: {trainer.history['best_metrics']['accuracy']:.4f}")
+        """
+        return self._history
     
     def _train_epoch(self, epoch: int) -> Dict[str, float]:
         """Execute one training epoch."""
