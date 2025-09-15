@@ -196,12 +196,12 @@ jobs:
       id: generate_notes
       if: steps.check_release.outputs.exists == 'false'
       run: |
-        # Check if changelog.md exists and use it, otherwise generate from commits
-        if [ -f "changelog.md" ]; then
-          echo "📋 Using changelog.md for release notes"
+        # Check if CHANGELOG.md exists and use it, otherwise generate from commits
+        if [ -f "CHANGELOG.md" ]; then
+          echo "📋 Using CHANGELOG.md for release notes"
           
           # Read changelog content
-          CHANGELOG_CONTENT=$(cat changelog.md)
+          CHANGELOG_CONTENT=$(cat CHANGELOG.md)
           
           # Generate release notes with changelog content
           cat << EOF > release_notes.md
@@ -245,7 +245,7 @@ jobs:
         EOF
         
         else
-          echo "📋 No changelog.md found, generating release notes from git commits"
+          echo "📋 No CHANGELOG.md found, generating release notes from git commits"
           
           # Get the last release tag
           LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
