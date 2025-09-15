@@ -33,7 +33,7 @@ def create_experiment_dir(base_dir: str = "./checkpoints") -> str:
         str: Path to the created experiment directory
         
     Example:
-        "trademil-experiment-25-12-2024-2:30pm-UTC"
+        "trademil-experiment-25-12-2024-2-30-00pm-UTC"
     """
     # Try to get project name from different sources
     project_name = _get_project_name()
@@ -44,8 +44,8 @@ def create_experiment_dir(base_dir: str = "./checkpoints") -> str:
     # Format date as DD-MM-YYYY
     date_str = now.strftime("%d-%m-%Y")
     
-    # Format time as 1:45:30pm (12-hour with seconds and am/pm)
-    time_str = now.strftime("%I:%M:%S%p").lower()
+    # Format time as 1-45-30pm (12-hour with seconds and am/pm) - Windows compatible
+    time_str = now.strftime("%I:%M:%S%p").lower().replace(":", "-")
     
     # Get timezone (simplified)
     try:

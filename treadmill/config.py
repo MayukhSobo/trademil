@@ -162,8 +162,8 @@ class TrainingConfig:
         # Format date as DD-MM-YYYY
         date_str = now.strftime("%d-%m-%Y")
         
-        # Format time as HH:MM:SSam/pm (e.g., 01:45:30pm)
-        time_str = now.strftime("%I:%M:%S%p").lower()
+        # Format time as HH-MM-SSam/pm (e.g., 01-45-30pm) - Windows compatible
+        time_str = now.strftime("%I:%M:%S%p").lower().replace(":", "-")
         
         # Create project name if not provided
         if not self.project_name:
