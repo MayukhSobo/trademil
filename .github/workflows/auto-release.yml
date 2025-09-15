@@ -192,23 +192,74 @@ jobs:
           echo "exists=false" >> $GITHUB_OUTPUT
         fi
     
-    - name: Get latest commits since last release
-      id: get_commits
+    - name: Generate release notes
+      id: generate_notes
       if: steps.check_release.outputs.exists == 'false'
       run: |
-        # Get the last release tag
-        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        # Check if changelog.md exists and use it, otherwise generate from commits
+        if [ -f "changelog.md" ]; then
+          echo "📋 Using changelog.md for release notes"
+          
+          # Read changelog content
+          CHANGELOG_CONTENT=$(cat changelog.md)
+          
+          # Generate release notes with changelog content
+          cat << EOF > release_notes.md
+        # 🏃‍♀️‍➡️ Treadmill v${{ steps.get_version.outputs.version }}
         
-        if [ -z "$LAST_TAG" ]; then
-          # No previous tags, get all commits
-          COMMITS=$(git log --pretty=format:"- %s" --no-merges)
+        ## ✨ Release Information
+        
+        **Version bump:** ${{ steps.current_version.outputs.version }} → ${{ steps.get_version.outputs.version }} (${{ steps.bump_type.outputs.bump }})
+        
+        **Latest commit:** ${{ steps.commit_info.outputs.message || 'Manual release' }}
+        
+        ---
+        
+        $CHANGELOG_CONTENT
+        
+        ---
+        
+        ## 📦 Installation
+        
+        \`\`\`bash
+        pip install pytorch-treadmill==${{ steps.get_version.outputs.version }}
+        \`\`\`
+        
+        **With optional dependencies:**
+        \`\`\`bash
+        pip install "pytorch-treadmill[examples]==${{ steps.get_version.outputs.version }}"  # Examples
+        pip install "pytorch-treadmill[full]==${{ steps.get_version.outputs.version }}"     # Full features
+        pip install "pytorch-treadmill[dev]==${{ steps.get_version.outputs.version }}"      # Development
+        \`\`\`
+        
+        ## 🔗 Links
+        
+        - 📖 [Documentation](https://mayukhsobo.github.io/treadmill/)  
+        - 🐛 [Issues](https://github.com/MayukhSobo/treadmill/issues)
+        - 💬 [Discussions](https://github.com/MayukhSobo/treadmill/discussions)
+        - 📚 [Examples](https://github.com/MayukhSobo/treadmill/tree/main/examples)
+        
+        ---
+        
+        **Full Changelog**: https://github.com/MayukhSobo/treadmill/compare/$(git describe --tags --abbrev=0 2>/dev/null || echo 'initial')...v${{ steps.get_version.outputs.version }}
+        EOF
+        
         else
-          # Get commits since last tag
-          COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s" --no-merges)
-        fi
-        
-        # Generate release notes
-        cat << EOF > release_notes.md
+          echo "📋 No changelog.md found, generating release notes from git commits"
+          
+          # Get the last release tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LAST_TAG" ]; then
+            # No previous tags, get all commits
+            COMMITS=$(git log --pretty=format:"- %s" --no-merges)
+          else
+            # Get commits since last tag
+            COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s" --no-merges)
+          fi
+          
+          # Generate release notes from commits
+          cat << EOF > release_notes.md
         # 🏃‍♀️‍➡️ Treadmill v${{ steps.get_version.outputs.version }}
         
         ## ✨ What's New
@@ -257,6 +308,8 @@ jobs:
         
         **Full Changelog**: https://github.com/MayukhSobo/treadmill/compare/${LAST_TAG}...v${{ steps.get_version.outputs.version }}
         EOF
+        
+        fi
     
     - name: Create and Publish Release
       if: steps.check_release.outputs.exists == 'false'
