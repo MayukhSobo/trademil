@@ -201,6 +201,7 @@ class ProgressTracker:
         self.epoch_start_time = None
         self.live_display = None
         self.current_batch = 0
+        self.total_time = 0.0  # Store total training time
         # Store previous epoch metrics for change calculation
         self.prev_epoch_metrics = None
         # Rich Live display components
@@ -216,10 +217,10 @@ class ProgressTracker:
         self.total_batches_per_epoch = total_batches_per_epoch
         
         # Print training header
-        header_line = "_"*60
-        console.print(f"\n{header_line}", justify="center")
-        console.print(f"[bold {COLORS['header']}]🚀 Starting Training with Treadmill[/bold {COLORS['header']}]", justify="center")
-        console.print(header_line, justify="center")
+        # header_line = "_"*60
+        # console.print(f"\n{header_line}", justify="center")
+        # console.print(f"[bold {COLORS['header']}]🚀 Starting Training with Treadmill[/bold {COLORS['header']}]", justify="center")
+        # console.print(header_line, justify="center")
     
     def start_epoch(self, epoch: int, total_batches: int, total_epochs: int = None, progress_bar: bool = True):
         """Start epoch tracking with Rich Live display or simple mode."""
@@ -315,16 +316,16 @@ class ProgressTracker:
             show_header=True, 
             header_style=f"bold {COLORS['metric']}", 
             box=box.ROUNDED,
-            title=f"[bold {COLORS['epoch']}]Epoch {epoch + 1} Summary[/bold {COLORS['epoch']}]",
+            title=f"\n[bold {COLORS['epoch']}]Epoch {epoch + 1} Summary[/bold {COLORS['epoch']}]",
             title_style=f"bold {COLORS['epoch']}"
         )
         table.add_column("Metric", style=COLORS['metric'], no_wrap=True)
         table.add_column("Train", style=COLORS['train'], justify="right")
         if val_metrics:
             table.add_column("Validation", style=COLORS['val'], justify="right")
-            table.add_column("Change", style=COLORS['improvement'], justify="right")
+            table.add_column("Change (from prev)", style=COLORS['improvement'], justify="right")
         else:
-            table.add_column("Change", style=COLORS['improvement'], justify="right")
+            table.add_column("Change (from prev)", style=COLORS['improvement'], justify="right")
         
         # Add metrics to table
         all_metrics = set(train_metrics.keys())
@@ -445,14 +446,9 @@ class ProgressTracker:
         console.print()
         
     def finish_training(self):
-        """Print training completion message."""
+        """Calculate and store total training time."""
         if self.start_time:
-            total_time = time.time() - self.start_time
-            
-            console.print("\n" + "_"*60, justify="center")
-            console.print(f"[bold {COLORS['success']}]✅ Training Complete![/bold {COLORS['success']}]", justify="center")
-            console.print(f"[{COLORS['success']}]Total training time: {format_time(total_time)}[/{COLORS['success']}]", justify="center")
-            console.print("_"*60, justify="center")
+            self.total_time = time.time() - self.start_time
 
 
 def print_model_summary(model, sample_input_shape: Optional[tuple] = None):

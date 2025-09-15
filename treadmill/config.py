@@ -8,6 +8,11 @@ import torch.optim as optim
 from datetime import datetime
 import pytz
 import os
+import re
+from rich.console import Console
+
+# Rich console for warnings
+console = Console()
 
 
 @dataclass
@@ -44,6 +49,7 @@ class TrainingConfig:
     
     # Training parameters
     epochs: int = 10
+    additional_epochs: Optional[int] = None  # For resume training: specify additional epochs instead of total
     device: str = "auto"  # "auto", "cpu", "cuda", or specific device
     
     # Optimizer and scheduler
@@ -51,21 +57,21 @@ class TrainingConfig:
     scheduler: Optional[SchedulerConfig] = None
     
     # Validation settings
-    validate_every: int = 1  # Validate every N epochs
+    validate_every: int = 1  # Good practice to validate every 1 epoch
     early_stopping_patience: Optional[int] = None
     
-    # Checkpointing
-    save_best_model: bool = True
-    checkpoint_dir: str = "./checkpoints"
-    project_name: Optional[str] = None  # Project name for experiment directory
-    use_experiment_dir: bool = True  # Create unique experiment directories
-    timezone: str = "IST"  # Default timezone for experiment naming
+    # Checkpointing settings
+    checkpoint_dir: Optional[str] = None
+    project_name: Optional[str] = None
+    resume_training: bool = False
+    keep_all_checkpoints: bool = False  # if False, only keep the best
+    timezone: str = "UTC"
     
     # Display settings
-    print_every: int = 10  # Print progress every N batches
+    print_every: int = 10  # Print metrics every 10 batches
     progress_bar: bool = True
     
-    # Custom forward/backward functions
+    # Custom forward/backward functions for complex architectures
     custom_forward_fn: Optional[Callable] = None
     custom_backward_fn: Optional[Callable] = None
     
@@ -83,9 +89,33 @@ class TrainingConfig:
             import torch
             self.device = "cuda" if torch.cuda.is_available() else "cpu"
         
-        # Create experiment directory if enabled
-        if self.use_experiment_dir:
-            self.checkpoint_dir = self._create_experiment_dir()
+        # Validate resume training requirements
+        if self.resume_training and self.checkpoint_dir is None:
+            raise ValueError("checkpoint_dir cannot be None when resume_training is True. "
+                           "Please provide the path to the existing checkpoint directory.")
+        
+        # Handle resume training: extract project_name and timezone from checkpoint directory
+        if self.resume_training:
+            self._handle_resume_training_config()
+        
+        # Handle automatic epoch calculation for resume training
+        if self.resume_training and self.additional_epochs is not None:
+            # Automatically calculate total epochs from checkpoint + additional epochs
+            last_epoch = self._get_last_completed_epoch()
+            if last_epoch > 0:
+                self.epochs = last_epoch + self.additional_epochs
+            else:
+                raise ValueError("No valid checkpoints found for resume training")
+        
+        # Handle experiment directory setup
+        if self.resume_training:
+            # Resume training: validate existing directory
+            self._validate_resume_directory()
+        elif self.checkpoint_dir is not None:
+            # Not resuming but checkpoint_dir provided: create new experiment dir within it
+            base_dir = self.checkpoint_dir
+            self.checkpoint_dir = self._create_experiment_dir(base_dir)
+        # If checkpoint_dir is None and not resuming: no checkpointing (do nothing)
             
         if isinstance(self.optimizer, dict):
             # Separate known OptimizerConfig parameters from optimizer-specific ones
@@ -107,7 +137,7 @@ class TrainingConfig:
         if self.scheduler and isinstance(self.scheduler, dict):
             self.scheduler = SchedulerConfig(**self.scheduler)
     
-    def _create_experiment_dir(self) -> str:
+    def _create_experiment_dir(self, base_dir: str = "./checkpoints") -> str:
         """Create a unique experiment directory with timestamp."""
         # Get current time in specified timezone
         if self.timezone == "IST":
@@ -157,7 +187,7 @@ class TrainingConfig:
         exp_dir_name = f"{project_name_clean}-experiment-{date_str}-{time_str}-{self.timezone}"
         
         # Create full path
-        exp_dir_path = os.path.join(self.checkpoint_dir, exp_dir_name)
+        exp_dir_path = os.path.join(base_dir, exp_dir_name)
         
         # Create directory if it doesn't exist
         os.makedirs(exp_dir_path, exist_ok=True)
@@ -165,4 +195,93 @@ class TrainingConfig:
         # Print the created directory for user awareness
         print(f"📁 Experiment directory created: {exp_dir_path}")
         
-        return exp_dir_path 
+        return exp_dir_path
+    
+    def _validate_resume_directory(self) -> None:
+        """Validate that the resume directory exists and contains checkpoints."""
+        if not os.path.exists(self.checkpoint_dir):
+            raise ValueError(f"Resume directory does not exist: {self.checkpoint_dir}")
+        
+        if not os.path.isdir(self.checkpoint_dir):
+            raise ValueError(f"Resume path is not a directory: {self.checkpoint_dir}")
+        
+        # Print resume message
+        print(f"🔍 Looking for checkpoints in: {self.checkpoint_dir}") 
+    
+    def _handle_resume_training_config(self):
+        """Extract project_name and timezone from checkpoint directory when resuming."""
+        # Store original values for comparison
+        original_project_name = self.project_name
+        original_timezone = self.timezone
+        
+        # Extract from checkpoint directory path
+        extracted_project_name, extracted_timezone = self._extract_project_info_from_checkpoint_dir()
+        
+        if extracted_project_name and extracted_timezone:
+            # Always use extracted values for consistency
+            self.project_name = extracted_project_name
+            self.timezone = extracted_timezone
+        else:
+            console.print(f"[yellow]⚠️  Warning: Could not extract project info from checkpoint directory path[/yellow]")
+            console.print(f"[yellow]   Using provided values: project_name='{self.project_name}', timezone='{self.timezone}'[/yellow]")
+            console.print()
+    
+    def _extract_project_info_from_checkpoint_dir(self):
+        """Extract project name and timezone from checkpoint directory path.
+        
+        Expected format: {project_name}-experiment-{date}-{time}-{timezone}
+        Example: mnist-experiment-15-09-2025-10:31:10pm-IST
+        
+        Returns:
+            tuple: (project_name, timezone) or (None, None) if parsing fails
+        """
+        # Get the directory name (last part of path)
+        dir_name = os.path.basename(self.checkpoint_dir.rstrip('/'))
+        
+        # Pattern to match: project_name-experiment-DD-MM-YYYY-HH:MM:SSam/pm-TIMEZONE
+        pattern = r'^(.+?)-experiment-\d{2}-\d{2}-\d{4}-\d{1,2}:\d{2}:\d{2}[ap]m-(.+)$'
+        match = re.match(pattern, dir_name)
+        
+        if match:
+            project_name = match.group(1)
+            timezone = match.group(2)
+            return project_name, timezone
+        
+        return None, None
+
+    def _get_last_completed_epoch(self):
+        """Extract the last completed epoch from checkpoint files."""
+        import os
+        import glob
+        import re
+        
+        if not os.path.exists(self.checkpoint_dir):
+            return 0
+        
+        # Find all checkpoint files (both types)
+        checkpoint_pattern = os.path.join(self.checkpoint_dir, "*.pt")
+        checkpoint_files = glob.glob(checkpoint_pattern)
+        
+        if not checkpoint_files:
+            return 0
+        
+        max_epoch = 0
+        
+        # Check training checkpoint files first (these have the actual training progress)
+        for checkpoint_file in checkpoint_files:
+            filename = os.path.basename(checkpoint_file)
+            
+            # Extract epoch from training checkpoint filename (1-based): training_checkpoint_epoch_016_0.0516.pt
+            training_match = re.search(r'training_checkpoint_epoch_(\d+)_(\d+\.?\d*)\.pt$', filename)
+            if training_match:
+                epoch_num = int(training_match.group(1))  # Already 1-based
+                max_epoch = max(max_epoch, epoch_num)
+                continue
+            
+            # Extract epoch from best model checkpoint filename (now 1-based): checkpoint_016_0.0516.pt  
+            best_match = re.search(r'checkpoint_(\d+)_(\d+\.?\d*)\.pt$', filename)
+            if best_match:
+                epoch_num = int(best_match.group(1))  # Now 1-based after our fix
+                max_epoch = max(max_epoch, epoch_num)
+        
+        return max_epoch 

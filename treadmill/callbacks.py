@@ -4,8 +4,9 @@ Callback system for Treadmill training framework.
 
 import os
 import torch
-from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional
+from abc import ABC
+from typing import Dict, Optional, List
+from pathlib import Path
 import numpy as np
 
 
@@ -100,6 +101,7 @@ class EarlyStopping(Callback):
                     print(f"\nEarly stopping triggered after {epoch + 1} epochs")
                     print(f"Best {self.monitor}: {self.best_value:.6f}")
     
+    # // TODO: Is it really needed!
     def on_train_end(self, trainer, **kwargs):
         """Print early stopping summary."""
         if self.stopped_epoch > 0 and self.verbose:
@@ -163,8 +165,8 @@ class ModelCheckpoint(Callback):
     
     def _save_checkpoint(self, trainer, epoch: int, metrics: Dict[str, float]):
         """Save the actual checkpoint."""
-        # Format filepath with epoch and metrics
-        filepath = self.filepath.format(epoch=epoch, **metrics)
+        # Format filepath with epoch and metrics (using 1-based epoch numbering)
+        filepath = self.filepath.format(epoch=epoch, epoch_1based=epoch+1, **metrics)
         
         # Ensure correct file extension
         if not filepath.endswith(f".{self.save_format}"):
@@ -286,7 +288,7 @@ class LearningRateLogger(Callback):
             if self.verbose and len(self.lr_history) > 1:
                 prev_lr = self.lr_history[-2]
                 if abs(current_lr - prev_lr) > 1e-8:
-                    print(f"Learning rate changed: {prev_lr:.2e} → {current_lr:.2e}")
+                    print(f"Learning rate changed: {prev_lr:.2e} → {current_lr:.2e} at epoch {epoch}")
 
 
 class GradientClipping(Callback):
@@ -346,3 +348,11 @@ class MetricsLogger(Callback):
             with open(self.log_file, "a") as f:
                 values = ",".join([str(v) for v in epoch_data.values()])
                 f.write(values + "\n") 
+
+class WandbLogger(Callback):
+    """Log metrics to W&B Server"""
+
+    def __init__(self, project_name: str, 
+                 epoch_metrics: List[str], batch_metrics: List[str], 
+                 local_dir: Path, experiment_name_prefix: str):
+        pass
