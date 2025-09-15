@@ -90,4 +90,32 @@ class TestTrainingConfig:
         assert isinstance(config.optimizer, OptimizerConfig)
         assert config.optimizer.optimizer_class == torch.optim.SGD
         assert config.optimizer.lr == 1e-2
-        assert config.optimizer.params["momentum"] == 0.9 
+        assert config.optimizer.params["momentum"] == 0.9
+    
+    def test_resume_training_config(self):
+        """Test resume training configuration."""
+        config = TrainingConfig(
+            resume_training=False,  # Not testing actual resume, just config
+            additional_epochs=5,
+            checkpoint_dir="./test_checkpoints"
+        )
+        
+        assert config.resume_training is False
+        assert config.additional_epochs == 5
+        assert "./test_checkpoints" in config.checkpoint_dir  # Directory path is expanded
+    
+    def test_checkpoint_directory_config(self):
+        """Test checkpoint directory and project name configuration."""
+        config = TrainingConfig(
+            checkpoint_dir="./checkpoints",
+            project_name="test_project",
+            timezone="UTC",
+            keep_all_checkpoints=False
+        )
+        
+        # Checkpoint dir gets expanded with experiment name
+        assert "./checkpoints" in config.checkpoint_dir
+        assert "test_project-experiment" in config.checkpoint_dir
+        assert config.project_name == "test_project"
+        assert config.timezone == "UTC"
+        assert config.keep_all_checkpoints is False 

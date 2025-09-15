@@ -179,4 +179,73 @@ class TestTrainer:
         
         assert "epoch" in checkpoint
         assert "model_state_dict" in checkpoint
-        assert "optimizer_state_dict" in checkpoint 
+        assert "optimizer_state_dict" in checkpoint
+    
+    def test_training_report_generation(self, dummy_data, basic_config):
+        """Test training report generation after training."""
+        train_loader, val_loader = dummy_data
+        model = SimpleModel()
+        loss_fn = nn.CrossEntropyLoss()
+        
+        trainer = Trainer(
+            model=model,
+            config=basic_config,
+            train_dataloader=train_loader,
+            val_dataloader=val_loader,
+            loss_fn=loss_fn,
+            metric_fns={"accuracy": StandardMetrics.accuracy}
+        )
+        
+        # Run training
+        history = trainer.train()
+        
+        # Check that training report was generated
+        assert trainer.training_report is not None
+        assert trainer.report is not None  # Test property access
+        
+        # Check report contents
+        report = trainer.report
+        assert report.total_epochs == basic_config.epochs
+        assert report.model_name == "SimpleModel"
+        assert report.total_parameters > 0
+        assert report.trainable_parameters > 0
+        assert report.model_size_mb > 0
+        assert report.device == "cpu"
+        assert report.batch_size == 16  # From dummy data fixture
+        
+        # Check that metrics are recorded
+        assert len(report.best_metrics) > 0
+        assert len(report.final_metrics) > 0
+        
+        # Test serialization
+        report_dict = report.to_dict()
+        assert isinstance(report_dict, dict)
+        assert "total_epochs" in report_dict
+        assert "model_name" in report_dict
+    
+    def test_hardware_monitor_initialization(self, dummy_data, basic_config):
+        """Test that hardware monitor is properly initialized."""
+        train_loader, val_loader = dummy_data
+        model = SimpleModel()
+        loss_fn = nn.CrossEntropyLoss()
+        
+        trainer = Trainer(
+            model=model,
+            config=basic_config,
+            train_dataloader=train_loader,
+            val_dataloader=val_loader,
+            loss_fn=loss_fn
+        )
+        
+        # Check hardware monitor exists
+        assert hasattr(trainer, 'hardware_monitor')
+        assert trainer.hardware_monitor is not None
+        
+        # Test sampling (should not raise errors)
+        trainer.hardware_monitor.sample()
+        
+        # Test getting summary
+        summary = trainer.hardware_monitor.get_summary()
+        assert isinstance(summary, dict)
+        assert 'avg_cpu_percent' in summary
+        assert 'num_gpus' in summary 

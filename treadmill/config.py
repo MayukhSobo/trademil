@@ -152,7 +152,7 @@ class TrainingConfig:
             # Try to use the provided timezone string directly
             try:
                 tz = pytz.timezone(self.timezone)
-            except:
+            except (pytz.UnknownTimeZoneError, AttributeError):
                 # Fallback to UTC if timezone is invalid
                 tz = pytz.UTC
                 self.timezone = "UTC"
@@ -176,12 +176,12 @@ class TrainingConfig:
                     self.project_name = parent_dir
                 else:
                     self.project_name = "experiment"
-            except:
+            except (OSError, AttributeError):
                 self.project_name = "experiment"
         
         # Clean project name (remove special characters)
-        project_name_clean = "".join(c if c.isalnum() or c in ['-', '_'] else '_' 
-                                    for c in self.project_name)
+        project_name_clean = "".join(c if c.isalnum() or c in ['-', '_'] else '_'
+                                      for c in self.project_name)
         
         # Create experiment directory name
         exp_dir_name = f"{project_name_clean}-experiment-{date_str}-{time_str}-{self.timezone}"
@@ -210,19 +210,25 @@ class TrainingConfig:
     
     def _handle_resume_training_config(self):
         """Extract project_name and timezone from checkpoint directory when resuming."""
-        # Store original values for comparison
-        original_project_name = self.project_name
-        original_timezone = self.timezone
-        
-        # Extract from checkpoint directory path
         extracted_project_name, extracted_timezone = self._extract_project_info_from_checkpoint_dir()
-        
+
         if extracted_project_name and extracted_timezone:
-            # Always use extracted values for consistency
+            user_provided_different_values = (
+                (self.project_name is not None and self.project_name != extracted_project_name) or
+                (self.timezone != "UTC" and self.timezone != extracted_timezone)
+            )
+
+            if user_provided_different_values:
+                console.print("[yellow]⚠️  Resume Training: Ignoring user-provided project-name and timezone[/yellow]")
+                console.print("[yellow]   Using values from checkpoint directory for consistency:[/yellow]")
+                console.print(f"[yellow]   • Project name: {extracted_project_name}[/yellow]")
+                console.print(f"[yellow]   • Timezone: {extracted_timezone}[/yellow]")
+                console.print()
+
             self.project_name = extracted_project_name
             self.timezone = extracted_timezone
         else:
-            console.print(f"[yellow]⚠️  Warning: Could not extract project info from checkpoint directory path[/yellow]")
+            console.print("[yellow]⚠️  Warning: Could not extract project info from checkpoint directory path[/yellow]")
             console.print(f"[yellow]   Using provided values: project_name='{self.project_name}', timezone='{self.timezone}'[/yellow]")
             console.print()
     

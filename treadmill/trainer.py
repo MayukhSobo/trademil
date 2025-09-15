@@ -249,7 +249,6 @@ class Trainer:
         # Try to extract from training checkpoint filename: training_checkpoint_epoch_003_0.0686.pt
         training_match = re.search(r'training_checkpoint_epoch_(\d+)_(\d+\.?\d*)\.pt$', filename)
         if training_match:
-            epoch_num = int(training_match.group(1))
             loss_value = float(training_match.group(2))
             # Training checkpoints typically store validation loss if validation is enabled
             if self.val_dataloader:
@@ -262,7 +261,6 @@ class Trainer:
         # Try to extract from best model checkpoint filename: checkpoint_003_0.0664.pt
         best_match = re.search(r'checkpoint_(\d+)_(\d+\.?\d*)\.pt$', filename)
         if best_match:
-            epoch_num = int(best_match.group(1))
             loss_value = float(best_match.group(2))
             # Best model checkpoints are saved based on the monitored metric
             if self.val_dataloader:
@@ -379,13 +377,13 @@ class Trainer:
         except KeyboardInterrupt:
             # Save checkpoint when training is interrupted to preserve progress
             if self.config.checkpoint_dir is not None:
-                print(f"\n💾 Saving checkpoint due to interruption...")
+                print("\n💾 Saving checkpoint due to interruption...")
                 # Use the last known loss value
                 last_loss = getattr(self, '_last_loss', 0.0)
                 self.save_training_checkpoint(self.current_epoch, last_loss)
             
-            from rich.text import Text
             from treadmill.utils import COLORS, console
+            from rich.text import Text
             interrupt_text = Text("Training interrupted by user", style=f"bold {COLORS['warning']}")
             console.print(f"\n{interrupt_text}")
             console.print(f"🔄 You can resume training from epoch {self.current_epoch + 1}")
