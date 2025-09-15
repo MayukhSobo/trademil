@@ -67,16 +67,16 @@ jobs:
       with:
         python-version: '3.11'
     
-    - name: Install dependencies
+    - name: Install only required tools
       run: |
         python -m pip install --upgrade pip
-        pip install -e .
         pip install bump2version
     
     - name: Get current version
       id: current_version
       run: |
-        VERSION=$(python -c "import treadmill; print(treadmill.__version__)")
+        # Parse version directly from __init__.py without importing heavy dependencies
+        VERSION=$(grep "__version__ = " treadmill/__init__.py | cut -d'"' -f2)
         echo "version=$VERSION" >> $GITHUB_OUTPUT
         echo "tag=v$VERSION" >> $GITHUB_OUTPUT
     
@@ -139,12 +139,15 @@ jobs:
     - name: Commit version bump
       run: |
         git add pyproject.toml setup.py treadmill/__init__.py
-        git commit -m "chore: bump version to $(python -c "import treadmill; print(treadmill.__version__)")"
+        # Parse new version directly from file
+        NEW_VERSION=$(grep "__version__ = " treadmill/__init__.py | cut -d'"' -f2)
+        git commit -m "chore: bump version to $NEW_VERSION"
     
     - name: Get new version
       id: get_version
       run: |
-        NEW_VERSION=$(python -c "import treadmill; print(treadmill.__version__)")
+        # Parse new version directly from file
+        NEW_VERSION=$(grep "__version__ = " treadmill/__init__.py | cut -d'"' -f2)
         echo "version=$NEW_VERSION" >> $GITHUB_OUTPUT
         echo "tag=v$NEW_VERSION" >> $GITHUB_OUTPUT
     
@@ -323,4 +326,4 @@ jobs:
       if: steps.check_release.outputs.exists == 'true'
       run: |
         echo "ℹ️ Release ${{ steps.get_version.outputs.tag }} already exists"
-        echo "💡 Update version in pyproject.toml, setup.py and treadmill/__init__.py to create new release" 
+        echo "💡 Update version in pyproject.toml, setup.py and treadmill/__init__.py to create new release"
