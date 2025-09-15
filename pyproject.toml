@@ -38,6 +38,7 @@ dependencies = [
     "torchinfo>=1.7.0",
     "scikit-learn>=1.0.0",
     "click>=8.0.0",
+    "pytz>=2021.3",
     "psutil>=5.8.0",
     "pynvml>=8.0.4",
 ]
