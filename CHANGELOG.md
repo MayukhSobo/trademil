@@ -1,4 +1,4 @@
-# 🎉 Final Changelog v0.6.3
+# 🎉 Final Changelog v0.6.4
 
 ## 🐛 Bug Fixes
 - Fixed checkpoint filename epoch numbering (now 1-based, consistent with UI)
